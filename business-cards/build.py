@@ -32,6 +32,7 @@ body{font-family:Inter,system-ui,sans-serif}
 .front .brand img{width:.26in;height:.26in}
 .front .name{font-size:17pt;line-height:1.05;margin-top:.2in;color:#13294b}
 .front .vet{font-size:7pt;color:#5b6475;margin-top:.04in}
+.front .vet+.vet{margin-top:.02in}
 .front .vet::before{content:"\\2713";color:#2a9c84;font-weight:700;margin-right:.04in}
 .front .role{font-size:6.6pt;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#2a9c84;margin-top:.05in}
 .front .lines{position:absolute;bottom:0;left:0;display:grid;gap:.035in;font-size:7.6pt;color:#1a1f2b}
@@ -52,6 +53,7 @@ def page(name, phone):
   <div class="name serif">{name}</div>
   <div class="role">Commercial cleaning · Cache Valley</div>
   <div class="vet">Veteran owned &amp; operated</div>
+  <div class="vet">Licensed &amp; insured</div>
   <div class="lines">
     <span>{PHONE}<b>{phone}</b></span>
     <span>{MAIL}office@secondmancleaning.com</span>
