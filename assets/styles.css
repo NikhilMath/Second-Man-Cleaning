@@ -139,3 +139,13 @@ footer .bottom{padding-top:24px;font-size:.85rem;opacity:.6}
   .nav-links.open{display:flex}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* simplified homepage */
+.hero .wrap{grid-template-columns:1fr}
+.hero p{margin-bottom:2rem}
+.nav-cta{padding:.6rem 1.1rem}
+.contact-center{justify-items:center;font-size:1.15rem}
+@media (max-width:640px){.nav-cta{font-size:.9rem;padding:.5rem .9rem}.nav .brand{font-size:1.05rem}}
+.nav-cta,.nav .brand{white-space:nowrap}
+@media (max-width:400px){.nav .brand{font-size:.95rem;gap:.5rem}.nav .brand-mark{width:32px;height:32px}.nav-cta{font-size:.82rem;padding:.45rem .75rem}}
+@media (max-width:400px){.nav .wrap{gap:10px}.nav .brand{font-size:.88rem}}
