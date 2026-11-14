@@ -1,0 +1,11 @@
+{
+  "name": "Second Man Cleaning",
+  "short_name": "Second Man",
+  "icons": [
+    { "src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/assets/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ],
+  "theme_color": "#13294b",
+  "background_color": "#13294b",
+  "display": "browser"
+}
