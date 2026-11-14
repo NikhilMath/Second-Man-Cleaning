@@ -1,0 +1,35 @@
+<!doctype html>
+<!-- Source for og-card.png (1200x630). Re-render after any site change:
+     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --hide-scrollbars \
+       --window-size=1200,630 --virtual-time-budget=5000 --screenshot=assets/og-card.png assets/og-card.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1200px;height:630px;overflow:hidden}
+  body{background:#13294b;color:#f6f1e7;font-family:Inter,system-ui,sans-serif;position:relative;padding:72px 80px}
+  body::after{content:"";position:absolute;right:-180px;top:-200px;width:640px;height:640px;border-radius:50%;background:radial-gradient(circle,rgba(63,193,165,.32),transparent 65%)}
+  .brand{display:flex;align-items:center;gap:22px;position:relative;z-index:1}
+  .brand img{width:84px;height:84px;border-radius:19px;box-shadow:0 0 0 2px rgba(246,241,231,.22)}
+  .brand span{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:40px}
+  .eyebrow{margin-top:70px;font-size:20px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#3fc1a5;position:relative;z-index:1}
+  h1{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:76px;line-height:1.05;letter-spacing:-.01em;margin-top:16px;position:relative;z-index:1}
+  h1 em{color:#3fc1a5}
+  .foot{position:absolute;left:80px;right:80px;bottom:64px;display:flex;justify-content:space-between;align-items:center;font-size:24px;z-index:1}
+  .vet{opacity:.85}
+  .vet::before{content:"✓";color:#3fc1a5;font-weight:700;margin-right:10px}
+  .phone{background:#3fc1a5;color:#13294b;font-weight:600;border-radius:999px;padding:14px 28px}
+</style>
+</head>
+<body>
+  <div class="brand"><img src="favicon.svg" alt=""><span>Second Man Cleaning</span></div>
+  <div class="eyebrow">Commercial cleaning · Cache Valley</div>
+  <h1>A clean workplace,<br><em>every single day.</em></h1>
+  <div class="foot">
+    <span class="vet">Veteran owned &amp; operated</span>
+    <span class="phone">(435) 232-8058</span>
+  </div>
+</body>
+</html>
