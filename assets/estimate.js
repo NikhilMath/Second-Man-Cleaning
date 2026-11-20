@@ -39,7 +39,7 @@ const PRICING = {
     { key: 'high',   label: 'High',   maxPeople: Infinity, multiplier: 1.1  },
   ],
 
-  perRestroomPerVisit: 7,   // each restroom, each visit
+  perToiletPerVisit: 5,     // each toilet (and its stall/sink area), each visit
   perKitchenPerVisit: 5,    // each kitchen / breakroom, each visit
 
   weeksPerMonth: 4.33,      // visits per week × this = visits per month
@@ -92,7 +92,7 @@ function priceRange(value, minimum, P) {
   return [low, high];
 }
 
-// s = { type, sqft, restrooms, kitchens, floor, people, freq, addons: [] }
+// s = { type, sqft, toilets, kitchens, floor, people, freq, addons: [] }
 // Returns null until there is enough to price (facility type + square footage).
 function calcEstimate(s, P) {
   P = P || PRICING;
@@ -105,16 +105,16 @@ function calcEstimate(s, P) {
   const freqAssumed = !P.frequencies[s.freq];
   const freqKey = freqAssumed ? '1x' : s.freq;
   const freq = P.frequencies[freqKey];
-  const rr = Math.max(0, Math.round(s.restrooms || 0));
+  const toilets = Math.max(0, Math.round(s.toilets || 0));
   const kit = Math.max(0, Math.round(s.kitchens || 0));
 
   const sqftBase = tieredSqftCost(sqft, P.sqftTiers);
   const cleaning = sqftBase * type.multiplier * floor.multiplier * traffic.multiplier;
-  const restroomCost = rr * P.perRestroomPerVisit;
+  const toiletCost = toilets * P.perToiletPerVisit;
   const kitchenCost = kit * P.perKitchenPerVisit;
 
   const carpetSqft = sqft * floor.carpetShare;
-  const qty = { 'visit': 1, 'sqft-visit': sqft, 'restroom-month': rr, 'sqft': sqft,
+  const qty = { 'visit': 1, 'sqft-visit': sqft, 'restroom-month': toilets, 'sqft': sqft,
                 'carpet-sqft': carpetSqft, 'hard-sqft': sqft - carpetSqft, 'flat': 1 };
   const addons = (s.addons || []).filter(k => P.addOns[k]).map(k => {
     const a = P.addOns[k];
@@ -125,11 +125,11 @@ function calcEstimate(s, P) {
   const monthlyAddons = addons.filter(a => a.per === 'restroom-month');
   const oneTimeAddons = addons.filter(a => !a.recurring);
 
-  const base = { type, floor, traffic, freq, freqKey, freqAssumed, sqft, restrooms: rr, kitchens: kit, addons };
+  const base = { type, floor, traffic, freq, freqKey, freqAssumed, sqft, toilets, kitchens: kit, addons };
   const lines = [];
 
   if (freq.visitsPerWeek === 0) {
-    const visit = cleaning + restroomCost + kitchenCost;
+    const visit = cleaning + toiletCost + kitchenCost;
     const deep = visit * P.oneTimeMultiplier;
     lines.push([`Deep clean (standard visit $${visit.toFixed(2)} × ${P.oneTimeMultiplier})`, deep]);
     // Recurring add-ons are done once on a one-time job.
@@ -142,7 +142,7 @@ function calcEstimate(s, P) {
   }
 
   const visits = freq.visitsPerWeek * P.weeksPerMonth;
-  const listPerVisit = cleaning + restroomCost + kitchenCost + sum(perVisitAddons);
+  const listPerVisit = cleaning + toiletCost + kitchenCost + sum(perVisitAddons);
   const perVisit = listPerVisit * (1 - freq.discount);
   const raw = perVisit * visits + sum(monthlyAddons);
   const monthly = Math.max(raw, P.minimumMonthly);
@@ -150,7 +150,7 @@ function calcEstimate(s, P) {
   const oneTime = sum(oneTimeAddons);
 
   lines.push([`Cleaning, ${Math.round(sqft).toLocaleString('en-US')} sq ft (per visit)`, cleaning]);
-  if (rr) lines.push([`Restrooms: ${rr} × $${P.perRestroomPerVisit} (per visit)`, restroomCost]);
+  if (toilets) lines.push([`Toilets: ${toilets} × $${P.perToiletPerVisit} (per visit)`, toiletCost]);
   if (kit) lines.push([`Kitchens/breakrooms: ${kit} × $${P.perKitchenPerVisit} (per visit)`, kitchenCost]);
   perVisitAddons.forEach(a => lines.push([`${a.label} (per visit)`, a.amount]));
   if (freq.discount) lines.push([`Volume discount ${Math.round(freq.discount * 100)}% (per visit)`, -listPerVisit * freq.discount]);
@@ -205,14 +205,14 @@ if (typeof document !== 'undefined') (function () {
   const checked = name => { const el = $(`input[name="${name}"]:checked`, calc); return el ? el.value : ''; };
   function readState() {
     return {
-      type: checked('type'), sqft: num($('#sqft').value), restrooms: num($('#restrooms').value),
+      type: checked('type'), sqft: num($('#sqft').value), toilets: num($('#toilets').value),
       kitchens: num($('#kitchens').value), floor: checked('floor'), people: num($('#people').value),
       freq: checked('freq'),
       addons: $$('input[name="addon"]:checked', calc).map(i => i.value),
     };
   }
 
-  const PARAMS = { type: 'type', sqft: 'sqft', restrooms: 'rr', kitchens: 'kit', floor: 'floor', people: 'ppl', freq: 'freq' };
+  const PARAMS = { type: 'type', sqft: 'sqft', toilets: 'wc', kitchens: 'kit', floor: 'floor', people: 'ppl', freq: 'freq' };
   function writeURL(s) {
     const q = new URLSearchParams();
     Object.entries(PARAMS).forEach(([k, p]) => { if (s[k] !== '' && s[k] != null) q.set(p, s[k]); });
@@ -226,7 +226,7 @@ if (typeof document !== 'undefined') (function () {
     const setRadio = (name, v) => { const el = v && $(`input[name="${name}"][value="${CSS.escape(v)}"]`, calc); if (el) { el.checked = true; any = true; } };
     const setNum = (id, v) => { const n = num(v); if (n != null && n >= 0) { $('#' + id).value = n; any = true; } };
     setRadio('type', q.get('type')); setRadio('floor', q.get('floor')); setRadio('freq', q.get('freq'));
-    setNum('sqft', q.get('sqft')); setNum('restrooms', q.get('rr')); setNum('kitchens', q.get('kit')); setNum('people', q.get('ppl'));
+    setNum('sqft', q.get('sqft')); setNum('toilets', q.get('wc')); setNum('kitchens', q.get('kit')); setNum('people', q.get('ppl'));
     (q.get('add') || '').split(',').forEach(k => setRadio('addon', k));
     return any;
   }
@@ -356,7 +356,7 @@ if (typeof document !== 'undefined') (function () {
   const CHECKS = {
     'fs-type': () => checked('type') ? '' : 'Please choose the type of facility.',
     sqft: () => { const v = num($('#sqft').value); return v != null && v >= 100 && v <= 1000000 ? '' : 'Enter your cleanable square footage, for example 3500. A rough number is fine.'; },
-    restrooms: () => intIn(num($('#restrooms').value), 0, 200) ? '' : 'Enter the number of restrooms (0 or more, whole number).',
+    toilets: () => intIn(num($('#toilets').value), 0, 500) ? '' : 'Enter the number of toilets (0 or more, whole number).',
     kitchens: () => intIn(num($('#kitchens').value), 0, 100) ? '' : 'Enter the number of kitchens or breakrooms (0 or more, whole number).',
     'fs-floor': () => checked('floor') ? '' : 'Please choose your floor type.',
     people: () => intIn(num($('#people').value), 0, 100000) ? '' : 'Enter an approximate number of people per day. A rough guess is fine.',
@@ -382,7 +382,7 @@ if (typeof document !== 'undefined') (function () {
     'fs-current': () => $('input[name="has_cleaning_company"]:checked', book) ? '' : 'Please choose yes or no.',
   };
   // Checked top to bottom, in page order.
-  const CALC_FIELDS = ['sqft', 'restrooms', 'kitchens', 'fs-floor', 'people', 'fs-type', 'fs-freq'];
+  const CALC_FIELDS = ['sqft', 'toilets', 'kitchens', 'fs-floor', 'people', 'fs-type', 'fs-freq'];
   const BOOK_FIELDS = ['business', 'contact', 'phone', 'email', 'address', 'walk_date', 'fs-window', 'start_date', 'fs-current'];
   // Shows every error at once and moves to the first one. Returns how many fields need fixing.
   function validate(keys) {
@@ -450,7 +450,7 @@ if (typeof document !== 'undefined') (function () {
     const set = (name, v) => { book.elements[name].value = v; };
     set('facility_type', e.type.label);
     set('square_feet', Math.round(e.sqft));
-    set('restrooms', e.restrooms);
+    set('toilets', e.toilets);
     set('kitchens_breakrooms', e.kitchens);
     set('floor_type', e.floor.label);
     set('daily_people', s.people);
