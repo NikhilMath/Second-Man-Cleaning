@@ -159,10 +159,11 @@
           <div class="step-panel" data-step="1">
             <h3 id="sec-1" tabindex="-1"><span class="sec-num" aria-hidden="true">1</span>Size &amp; details</h3>
             <p class="step-intro">Rough numbers are fine. We confirm everything at the walkthrough.</p>
+            <p class="req-note"><span class="req" aria-hidden="true">*</span> Required</p>
 
             <div class="field">
-              <label for="sqft">Cleanable square footage</label>
-              <input id="sqft" type="number" inputmode="numeric" min="100" max="1000000" step="1" placeholder="e.g. 3500" aria-describedby="sqft-hint err-sqft">
+              <label for="sqft">Cleanable square footage<span class="req" aria-hidden="true">*</span></label>
+              <input id="sqft" aria-required="true" type="number" inputmode="numeric" min="100" max="1000000" step="1" placeholder="e.g. 3500" aria-describedby="sqft-hint err-sqft">
               <p class="hint" id="sqft-hint">Not sure? Pick a range:</p>
               <div class="quick" id="quick-sqft" role="group" aria-label="Square footage ranges">
                 <button type="button" data-sqft="1500" aria-pressed="false">Under 2,000</button>
@@ -176,36 +177,36 @@
 
             <div class="row2">
               <div class="field">
-                <label for="toilets">Toilets</label>
-                <input id="toilets" type="number" inputmode="numeric" min="0" max="500" step="1" placeholder="e.g. 3" aria-describedby="err-toilets">
+                <label for="toilets">Toilets<span class="req" aria-hidden="true">*</span></label>
+                <input id="toilets" aria-required="true" type="number" inputmode="numeric" min="0" max="500" step="1" placeholder="e.g. 3" aria-describedby="err-toilets">
                 <p class="err" id="err-toilets" role="alert"></p>
               </div>
               <div class="field">
-                <label for="kitchens">Kitchens / breakrooms</label>
-                <input id="kitchens" type="number" inputmode="numeric" min="0" max="100" step="1" placeholder="e.g. 1" aria-describedby="err-kitchens">
+                <label for="kitchens">Kitchens / breakrooms<span class="req" aria-hidden="true">*</span></label>
+                <input id="kitchens" aria-required="true" type="number" inputmode="numeric" min="0" max="100" step="1" placeholder="e.g. 1" aria-describedby="err-kitchens">
                 <p class="err" id="err-kitchens" role="alert"></p>
               </div>
             </div>
 
-            <fieldset id="fs-floor" aria-describedby="err-fs-floor">
-              <legend>Floors</legend>
+            <fieldset id="fs-floor" aria-required="true" aria-describedby="err-fs-floor">
+              <legend>Floors<span class="req" aria-hidden="true">*</span></legend>
               <div class="opts cols-3" id="opts-floor"></div>
               <p class="err" id="err-fs-floor" role="alert"></p>
             </fieldset>
 
             <div class="field">
-              <label for="people">About how many employees or daily visitors?</label>
-              <input id="people" type="number" inputmode="numeric" min="0" max="100000" step="1" placeholder="e.g. 20" aria-describedby="traffic-out err-people">
+              <label for="people">About how many employees or daily visitors?<span class="req" aria-hidden="true">*</span></label>
+              <input id="people" aria-required="true" type="number" inputmode="numeric" min="0" max="100000" step="1" placeholder="e.g. 20" aria-describedby="traffic-out err-people">
               <p class="hint" id="traffic-out" aria-live="polite"></p>
               <p class="err" id="err-people" role="alert"></p>
             </div>
           </div>
 
           <div class="step-panel" data-step="2">
-            <h3 id="sec-2" tabindex="-1"><span class="sec-num" aria-hidden="true">2</span>What kind of facility?</h3>
+            <h3 id="sec-2" tabindex="-1"><span class="sec-num" aria-hidden="true">2</span>What kind of facility?<span class="req" aria-hidden="true">*</span></h3>
             <p class="step-intro">Each type of space needs a different level of care.</p>
-            <fieldset id="fs-type" aria-describedby="err-fs-type">
-              <legend class="sr-only">Facility type</legend>
+            <fieldset id="fs-type" aria-required="true" aria-describedby="err-fs-type">
+              <legend class="sr-only">Facility type (required)</legend>
               <div class="opts" id="opts-type"></div>
               <p class="err" id="err-fs-type" role="alert"></p>
             </fieldset>
@@ -214,8 +215,8 @@
           <div class="step-panel" data-step="3">
             <h3 id="sec-3" tabindex="-1"><span class="sec-num" aria-hidden="true">3</span>How often?</h3>
             <p class="step-intro">More visits a week means a lower price per visit.</p>
-            <fieldset id="fs-freq" aria-describedby="err-fs-freq">
-              <legend>Cleaning frequency</legend>
+            <fieldset id="fs-freq" aria-required="true" aria-describedby="err-fs-freq">
+              <legend>Cleaning frequency<span class="req" aria-hidden="true">*</span></legend>
               <div class="opts" id="opts-freq"></div>
               <p class="err" id="err-fs-freq" role="alert"></p>
             </fieldset>
@@ -255,13 +256,13 @@
 
             <div class="row2">
               <div class="field">
-                <label for="business">Business name</label>
-                <input id="business" name="business_name" type="text" autocomplete="organization" aria-describedby="err-business">
+                <label for="business">Business name<span class="req" aria-hidden="true">*</span></label>
+                <input id="business" aria-required="true" name="business_name" type="text" autocomplete="organization" aria-describedby="err-business">
                 <p class="err" id="err-business" role="alert"></p>
               </div>
               <div class="field">
-                <label for="contact">Your name</label>
-                <input id="contact" name="contact_name" type="text" autocomplete="name" aria-describedby="err-contact">
+                <label for="contact">Your name<span class="req" aria-hidden="true">*</span></label>
+                <input id="contact" aria-required="true" name="contact_name" type="text" autocomplete="name" aria-describedby="err-contact">
                 <p class="err" id="err-contact" role="alert"></p>
               </div>
               <div class="field">
@@ -269,31 +270,31 @@
                 <input id="role" name="title_role" type="text" autocomplete="organization-title" placeholder="e.g. Office manager">
               </div>
               <div class="field">
-                <label for="phone">Phone</label>
-                <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(435) 555-0123" aria-describedby="err-phone">
+                <label for="phone">Phone<span class="req" aria-hidden="true">*</span></label>
+                <input id="phone" aria-required="true" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(435) 555-0123" aria-describedby="err-phone">
                 <p class="err" id="err-phone" role="alert"></p>
               </div>
             </div>
             <div class="field">
-              <label for="email">Email</label>
-              <input id="email" name="email" type="email" autocomplete="email" inputmode="email" aria-describedby="err-email">
+              <label for="email">Email<span class="req" aria-hidden="true">*</span></label>
+              <input id="email" aria-required="true" name="email" type="email" autocomplete="email" inputmode="email" aria-describedby="err-email">
               <p class="err" id="err-email" role="alert"></p>
             </div>
             <div class="field">
-              <label for="address">Facility address</label>
-              <input id="address" name="facility_address" type="text" autocomplete="street-address" placeholder="Street, city (Logan, North Logan, Smithfield…)" aria-describedby="err-address">
+              <label for="address">Facility address<span class="req" aria-hidden="true">*</span></label>
+              <input id="address" aria-required="true" name="facility_address" type="text" autocomplete="street-address" placeholder="Street, city (Logan, North Logan, Smithfield…)" aria-describedby="err-address">
               <p class="err" id="err-address" role="alert"></p>
             </div>
 
             <div class="row2">
               <div class="field">
-                <label for="walk_date">Preferred walkthrough date</label>
-                <input id="walk_date" name="walkthrough_date" type="date" aria-describedby="walk-hint err-walk_date">
+                <label for="walk_date">Preferred walkthrough date<span class="req" aria-hidden="true">*</span></label>
+                <input id="walk_date" aria-required="true" name="walkthrough_date" type="date" aria-describedby="walk-hint err-walk_date">
                 <p class="hint" id="walk-hint">Monday–Saturday</p>
                 <p class="err" id="err-walk_date" role="alert"></p>
               </div>
-              <fieldset id="fs-window" aria-describedby="err-fs-window">
-                <legend>Time window</legend>
+              <fieldset id="fs-window" aria-required="true" aria-describedby="err-fs-window">
+                <legend>Time window<span class="req" aria-hidden="true">*</span></legend>
                 <div class="opts">
                   <label class="opt"><input type="radio" name="walkthrough_window" value="Morning"><span>Morning</span></label>
                   <label class="opt"><input type="radio" name="walkthrough_window" value="Afternoon"><span>Afternoon</span></label>
@@ -303,13 +304,13 @@
             </div>
 
             <div class="field">
-              <label for="start_date">When would you like service to start?</label>
-              <input id="start_date" name="desired_start_date" type="date" aria-describedby="err-start_date">
+              <label for="start_date">When would you like service to start?<span class="req" aria-hidden="true">*</span></label>
+              <input id="start_date" aria-required="true" name="desired_start_date" type="date" aria-describedby="err-start_date">
               <p class="err" id="err-start_date" role="alert"></p>
             </div>
 
-            <fieldset id="fs-current" aria-describedby="err-fs-current">
-              <legend>Do you currently have a cleaning company?</legend>
+            <fieldset id="fs-current" aria-required="true" aria-describedby="err-fs-current">
+              <legend>Do you currently have a cleaning company?<span class="req" aria-hidden="true">*</span></legend>
               <div class="opts">
                 <label class="opt"><input type="radio" name="has_cleaning_company" value="Yes"><span>Yes</span></label>
                 <label class="opt"><input type="radio" name="has_cleaning_company" value="No"><span>No</span></label>

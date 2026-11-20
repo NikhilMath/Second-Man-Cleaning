@@ -153,3 +153,8 @@ legend .hint{margin-left:.35rem}
 @media (prefers-reduced-motion:reduce){.summary{transition:none}}
 /* landing spot for the auto-scroll after picking an option (clears the sticky nav) */
 .est-sec fieldset,.est-sec .field,.est-sec .row2{scroll-margin-top:96px}
+
+/* required-field marker */
+.req{color:#b42318;font-weight:700;margin-left:.2rem}
+.req-note{font-size:.88rem;color:var(--muted);margin:-.25rem 0 1rem}
+.req-note .req{margin:0 .15rem 0 0}
