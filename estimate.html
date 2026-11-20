@@ -63,31 +63,25 @@
 
     <div id="est-app" class="est-layout">
       <div class="wizard" id="wizard" tabindex="-1">
-        <div class="progress">
-          <div class="progress-top"><span id="progress-text">Step 1 of 5</span><span id="progress-name">Facility type</span></div>
-          <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill" style="width:20%"></div></div>
-        </div>
-
         <div class="shared-note" id="shared-note" hidden>
-          <p>You opened a shared estimate. Check the answers below, or skip straight to booking.</p>
-          <button type="button" class="btn btn-small" id="skip-to-book">Skip to booking</button>
+          <p>You opened a shared estimate. Check the answers below, or jump straight to booking.</p>
+          <button type="button" class="btn btn-small" id="skip-to-book">Jump to booking</button>
         </div>
 
-        <!-- Steps 1–4: the calculator. Not sent to Netlify directly; the results are copied into hidden fields in the booking form. -->
+        <!-- Sections 1–4: the calculator. Not sent to Netlify directly; the results are copied into hidden fields in the booking form. -->
         <form id="calc" novalidate>
           <div class="step-panel" data-step="1">
-            <h2 tabindex="-1">What kind of facility?</h2>
+            <h2 id="sec-1" tabindex="-1"><span class="sec-num" aria-hidden="true">1</span>What kind of facility?</h2>
             <p class="step-intro">Each type of space needs a different level of care.</p>
             <fieldset id="fs-type" aria-describedby="err-fs-type">
               <legend class="sr-only">Facility type</legend>
               <div class="opts" id="opts-type"></div>
               <p class="err" id="err-fs-type" role="alert"></p>
             </fieldset>
-            <div class="step-nav"><span></span><button type="button" class="btn btn-next" data-next>Next</button></div>
           </div>
 
-          <div class="step-panel" data-step="2" hidden>
-            <h2 tabindex="-1">Size &amp; details</h2>
+          <div class="step-panel" data-step="2">
+            <h2 id="sec-2" tabindex="-1"><span class="sec-num" aria-hidden="true">2</span>Size &amp; details</h2>
             <p class="step-intro">Rough numbers are fine. We confirm everything at the walkthrough.</p>
 
             <div class="field">
@@ -129,45 +123,33 @@
               <p class="hint" id="traffic-out" aria-live="polite"></p>
               <p class="err" id="err-people" role="alert"></p>
             </div>
-            <div class="step-nav"><button type="button" class="btn btn-back" data-back>Back</button><button type="button" class="btn btn-next" data-next>Next</button></div>
           </div>
 
-          <div class="step-panel" data-step="3" hidden>
-            <h2 tabindex="-1">How often?</h2>
+          <div class="step-panel" data-step="3">
+            <h2 id="sec-3" tabindex="-1"><span class="sec-num" aria-hidden="true">3</span>How often?</h2>
             <p class="step-intro">More visits a week means a lower price per visit.</p>
             <fieldset id="fs-freq" aria-describedby="err-fs-freq">
               <legend>Cleaning frequency</legend>
               <div class="opts" id="opts-freq"></div>
               <p class="err" id="err-fs-freq" role="alert"></p>
             </fieldset>
-            <fieldset id="fs-time" aria-describedby="err-fs-time">
-              <legend>Preferred time</legend>
-              <div class="opts cols-3">
-                <label class="opt"><input type="radio" name="time" value="After hours"><span>After hours</span></label>
-                <label class="opt"><input type="radio" name="time" value="Early morning"><span>Early morning</span></label>
-                <label class="opt"><input type="radio" name="time" value="During business hours"><span>During business hours</span></label>
-              </div>
-              <p class="err" id="err-fs-time" role="alert"></p>
-            </fieldset>
-            <div class="step-nav"><button type="button" class="btn btn-back" data-back>Back</button><button type="button" class="btn btn-next" data-next>Next</button></div>
+            <div class="hours-note" id="hours-note">
+              <p class="hours-title">Cleaning time: after hours (after 6 pm)</p>
+              <p>We clean after 6 pm so we're never in your team's way. We're working on extending our hours. If you need early-morning or daytime cleaning, tell us in the notes and we'll see what we can do.</p>
+            </div>
           </div>
 
-          <div class="step-panel" data-step="4" hidden>
-            <h2 tabindex="-1">Any add-ons?</h2>
-            <p class="step-intro">Optional. Skip this step if you just need regular cleaning.</p>
+          <div class="step-panel" data-step="4">
+            <h2 id="sec-4" tabindex="-1"><span class="sec-num" aria-hidden="true">4</span>Any add-ons?</h2>
+            <p class="step-intro">Optional. Leave these blank if you just need regular cleaning.</p>
             <fieldset>
-              <legend>Recurring <span class="hint">added to your monthly price</span></legend>
+              <legend>Add-on services <span class="hint">added to your monthly price</span></legend>
               <div class="opts" id="opts-addon-rec"></div>
             </fieldset>
-            <fieldset>
-              <legend>One-time projects <span class="hint">charged once</span></legend>
-              <div class="opts" id="opts-addon-once"></div>
-            </fieldset>
-            <div class="step-nav"><button type="button" class="btn btn-back" data-back>Back</button><button type="button" class="btn btn-next" data-next>Next: book a walkthrough</button></div>
           </div>
         </form>
 
-        <!-- Step 5: booking. Netlify Forms reads this form at deploy time. Every field name below shows up in the notification email. -->
+        <!-- Section 5: booking. Netlify Forms reads this form at deploy time. Every field name below shows up in the notification email. -->
         <form id="book" name="walkthrough" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
           <input type="hidden" name="form-name" value="walkthrough">
           <input type="hidden" name="subject" value="New walkthrough request">
@@ -191,8 +173,8 @@
           <input type="hidden" name="estimate_breakdown">
           <input type="hidden" name="share_link">
 
-          <div class="step-panel" data-step="5" hidden>
-            <h2 tabindex="-1">Book your free walkthrough</h2>
+          <div class="step-panel" data-step="5">
+            <h2 id="sec-5" tabindex="-1"><span class="sec-num" aria-hidden="true">5</span>Book your free walkthrough</h2>
             <p class="step-intro">We'll visit, confirm the details and give you a final quote. No obligation.</p>
 
             <div class="row2">
@@ -270,7 +252,7 @@
             </div>
 
             <p class="err" id="submit-error" role="alert" tabindex="-1"></p>
-            <div class="step-nav"><button type="button" class="btn btn-back" data-back>Back</button><button type="submit" class="btn btn-next" id="submit-btn">Book my free walkthrough</button></div>
+            <div class="form-end"><button type="submit" class="btn btn-next btn-submit" id="submit-btn">Book my free walkthrough</button></div>
           </div>
         </form>
       </div>

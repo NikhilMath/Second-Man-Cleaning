@@ -69,11 +69,6 @@ const PRICING = {
     restock:   { label: 'Restroom supply restocking', detail: 'We supply paper & soap', recurring: true,  per: 'restroom-month', price: 25    },
     disinfect: { label: 'Disinfection / sanitizing',  detail: 'Touchpoints every visit', recurring: true, per: 'sqft-visit',     price: 0.003 },
     trash:     { label: 'Trash & recycling to dumpster', detail: 'Every visit',         recurring: true,  per: 'visit',          price: 5     },
-    carpet:    { label: 'Carpet extraction / shampoo', detail: 'Deep carpet clean',     recurring: false, per: 'carpet-sqft',    price: 0.25  },
-    stripwax:  { label: 'Floor strip & wax',          detail: 'Hard floors',            recurring: false, per: 'hard-sqft',      price: 0.30  },
-    windows:   { label: 'Interior window cleaning',   detail: 'All interior glass',     recurring: false, per: 'flat',           price: 150   },
-    highdust:  { label: 'High dusting',               detail: 'Vents, fixtures, ledges',recurring: false, per: 'sqft',           price: 0.03  },
-    postcon:   { label: 'Post-construction cleanup',  detail: 'Dust, debris, film',     recurring: false, per: 'sqft',           price: 0.20  },
   },
 
   minimumMonthly: 250,  // smallest monthly contract
@@ -188,6 +183,8 @@ if (typeof module !== 'undefined') module.exports = { PRICING, calcEstimate, tie
 if (typeof document !== 'undefined') (function () {
   'use strict';
   const P = PRICING;
+  // Only time slot offered for now. Change this (and the note on the page) when hours expand.
+  const SERVICE_HOURS = 'After hours (after 6 pm)';
   const $ = (sel, root) => (root || document).querySelector(sel);
   const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
   const money = n => '$' + Math.round(n).toLocaleString('en-US');
@@ -199,10 +196,6 @@ if (typeof document !== 'undefined') (function () {
   const calc = $('#calc');
   const book = $('#book');
   const summary = $('#summary');
-  const panels = $$('.step-panel');
-  const TOTAL = panels.length;
-  const STEP_NAMES = ['Facility type', 'Size & details', 'Frequency', 'Add-ons', 'Book a walkthrough'];
-  let current = 1;
 
   /* --- build option lists from PRICING so labels stay in one place --- */
   const optHTML = (type, name, value, title, small, extra) =>
@@ -227,7 +220,6 @@ if (typeof document !== 'undefined') (function () {
   const addonOpt = ([k, a]) => optHTML('checkbox', 'addon', k, a.label,
     `${esc(a.detail)} · ${addonPrice(a)} <em class="tag ${a.recurring ? 'tag-rec' : 'tag-once'}">${a.recurring ? 'Recurring' : 'One-time'}</em>`);
   $('#opts-addon-rec').innerHTML = Object.entries(P.addOns).filter(([, a]) => a.recurring).map(addonOpt).join('');
-  $('#opts-addon-once').innerHTML = Object.entries(P.addOns).filter(([, a]) => !a.recurring).map(addonOpt).join('');
 
   /* --- read / write state --- */
   const checked = name => { const el = $(`input[name="${name}"]:checked`, calc); return el ? el.value : ''; };
@@ -235,12 +227,12 @@ if (typeof document !== 'undefined') (function () {
     return {
       type: checked('type'), sqft: num($('#sqft').value), restrooms: num($('#restrooms').value),
       kitchens: num($('#kitchens').value), floor: checked('floor'), people: num($('#people').value),
-      freq: checked('freq'), time: checked('time'),
+      freq: checked('freq'),
       addons: $$('input[name="addon"]:checked', calc).map(i => i.value),
     };
   }
 
-  const PARAMS = { type: 'type', sqft: 'sqft', restrooms: 'rr', kitchens: 'kit', floor: 'floor', people: 'ppl', freq: 'freq', time: 'time' };
+  const PARAMS = { type: 'type', sqft: 'sqft', restrooms: 'rr', kitchens: 'kit', floor: 'floor', people: 'ppl', freq: 'freq' };
   function writeURL(s) {
     const q = new URLSearchParams();
     Object.entries(PARAMS).forEach(([k, p]) => { if (s[k] !== '' && s[k] != null) q.set(p, s[k]); });
@@ -253,7 +245,7 @@ if (typeof document !== 'undefined') (function () {
     let any = false;
     const setRadio = (name, v) => { const el = v && $(`input[name="${name}"][value="${CSS.escape(v)}"]`, calc); if (el) { el.checked = true; any = true; } };
     const setNum = (id, v) => { const n = num(v); if (n != null && n >= 0) { $('#' + id).value = n; any = true; } };
-    setRadio('type', q.get('type')); setRadio('floor', q.get('floor')); setRadio('freq', q.get('freq')); setRadio('time', q.get('time'));
+    setRadio('type', q.get('type')); setRadio('floor', q.get('floor')); setRadio('freq', q.get('freq'));
     setNum('sqft', q.get('sqft')); setNum('restrooms', q.get('rr')); setNum('kitchens', q.get('kit')); setNum('people', q.get('ppl'));
     (q.get('add') || '').split(',').forEach(k => setRadio('addon', k));
     return any;
@@ -334,7 +326,7 @@ if (typeof document !== 'undefined') (function () {
   }
   calc.addEventListener('input', render);
   calc.addEventListener('change', render);
-  calc.addEventListener('submit', ev => { ev.preventDefault(); next(); });
+  calc.addEventListener('submit', ev => ev.preventDefault()); // Enter in a calculator field shouldn't do anything
 
   // Mobile: expand / collapse the bottom bar
   $('#sum-toggle').addEventListener('click', () => {
@@ -389,7 +381,6 @@ if (typeof document !== 'undefined') (function () {
     'fs-floor': () => checked('floor') ? '' : 'Please choose your floor type.',
     people: () => intIn(num($('#people').value), 0, 100000) ? '' : 'Enter an approximate number of people per day. A rough guess is fine.',
     'fs-freq': () => checked('freq') ? '' : 'Please choose how often you need cleaning.',
-    'fs-time': () => checked('time') ? '' : 'Please choose a preferred time.',
     business: () => $('#business').value.trim() ? '' : 'Enter your business name.',
     contact: () => $('#contact').value.trim() ? '' : 'Enter your name.',
     phone: () => { const d = $('#phone').value.replace(/\D/g, ''); return d.length === 10 || (d.length === 11 && d[0] === '1') ? '' : 'Enter a 10-digit phone number, like (435) 555-0123.'; },
@@ -410,14 +401,19 @@ if (typeof document !== 'undefined') (function () {
     },
     'fs-current': () => $('input[name="has_cleaning_company"]:checked', book) ? '' : 'Please choose yes or no.',
   };
-  const STEP_FIELDS = {
-    1: ['fs-type'], 2: ['sqft', 'restrooms', 'kitchens', 'fs-floor', 'people'], 3: ['fs-freq', 'fs-time'], 4: [],
-    5: ['business', 'contact', 'phone', 'email', 'address', 'walk_date', 'fs-window', 'start_date', 'fs-current'],
-  };
-  function validateStep(n) {
-    const bad = STEP_FIELDS[n].map(k => setErr(k, CHECKS[k]())).filter(Boolean);
-    if (bad.length) { const t = focusTarget(bad[0]); if (t) t.focus(); }
-    return !bad.length;
+  // Checked top to bottom, in page order.
+  const CALC_FIELDS = ['fs-type', 'sqft', 'restrooms', 'kitchens', 'fs-floor', 'people', 'fs-freq'];
+  const BOOK_FIELDS = ['business', 'contact', 'phone', 'email', 'address', 'walk_date', 'fs-window', 'start_date', 'fs-current'];
+  // Shows every error at once and moves to the first one. Returns how many fields need fixing.
+  function validate(keys) {
+    const bad = keys.map(k => setErr(k, CHECKS[k]())).filter(Boolean);
+    if (bad.length) {
+      const t = focusTarget(bad[0]);
+      const box = t && (t.closest('fieldset') || t.closest('.field'));
+      if (box) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (t) t.focus({ preventScroll: true });
+    }
+    return bad.length;
   }
   // Re-check a field as soon as the person fixes it (only if it was showing an error).
   function recheck(ev) {
@@ -438,27 +434,10 @@ if (typeof document !== 'undefined') (function () {
   }
   book.addEventListener('change', syncCurrent);
 
-  /* --- steps --- */
-  function go(n, focus) {
-    current = n;
-    panels.forEach((p, i) => { p.hidden = i + 1 !== n; });
-    $('#progress-text').textContent = `Step ${n} of ${TOTAL}`;
-    $('#progress-name').textContent = STEP_NAMES[n - 1];
-    $('#progress-fill').style.width = (n / TOTAL * 100) + '%';
-    if (focus !== false) {
-      const h = $('h2', panels[n - 1]);
-      h.focus({ preventScroll: true });
-      const top = $('#wizard').getBoundingClientRect().top;
-      if (top < 0 || top > window.innerHeight * 0.4) $('#wizard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-  function next() { if (validateStep(current) && current < TOTAL) go(current + 1); }
-  $$('[data-next]').forEach(b => b.addEventListener('click', next));
-  $$('[data-back]').forEach(b => b.addEventListener('click', () => go(Math.max(1, current - 1))));
   $('#skip-to-book').addEventListener('click', () => {
-    for (let n = 1; n < TOTAL; n++) if (!validateStep(n)) { go(n); validateStep(n); return; }
     $('#shared-note').hidden = true;
-    go(TOTAL);
+    $('#sec-5').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    $('#sec-5').focus({ preventScroll: true });
   });
 
   /* --- submit to Netlify Forms --- */
@@ -472,7 +451,7 @@ if (typeof document !== 'undefined') (function () {
     set('daily_people', s.people);
     set('traffic_level', e.traffic.label);
     set('frequency', e.freq.label);
-    set('preferred_time', s.time);
+    set('preferred_time', SERVICE_HOURS);
     set('add_ons', e.addons.length ? e.addons.map(a => `${a.label}: ${money(a.amount)} ${!a.recurring ? 'one-time' : a.per === 'restroom-month' ? 'per month' : 'per visit'}`).join('; ') : 'None');
     if (e.mode === 'once') {
       set('estimate_range', moneyRange(e.range) + ' one-time');
@@ -493,12 +472,12 @@ if (typeof document !== 'undefined') (function () {
 
   book.addEventListener('submit', ev => {
     ev.preventDefault();
-    for (let n = 1; n < TOTAL; n++) if (!validateStep(n)) { go(n); validateStep(n); return; }
-    if (!validateStep(TOTAL)) return;
+    const btn = $('#submit-btn'), msg = $('#submit-error');
+    const bad = validate(CALC_FIELDS.concat(BOOK_FIELDS));
+    msg.textContent = bad ? `Please fix the ${bad === 1 ? 'highlighted field' : bad + ' highlighted fields'} above.` : '';
+    if (bad) return;
     const s = readState(), e = calcEstimate(s, P);
     fillHidden(s, e);
-    const btn = $('#submit-btn'), msg = $('#submit-error');
-    msg.textContent = '';
     // Honeypot: real people never fill this hidden field.
     if (book.elements['bot-field'].value) { showDone(s, e); return; }
     btn.disabled = true; btn.textContent = 'Sending…';
@@ -539,5 +518,4 @@ if (typeof document !== 'undefined') (function () {
   /* --- start --- */
   if (readURL()) $('#shared-note').hidden = false;
   render();
-  go(1, false);
 })();

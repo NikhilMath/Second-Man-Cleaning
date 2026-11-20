@@ -20,19 +20,17 @@
 .wizard:focus{outline:none}
 .noscript{background:var(--cream);border-radius:14px;padding:18px;margin-bottom:20px}
 
-/* progress */
-.progress{margin-bottom:26px}
-.progress-top{display:flex;justify-content:space-between;gap:1rem;font-size:.88rem;font-weight:600;color:var(--muted);margin-bottom:.5rem}
-.progress-top span:first-child{color:var(--navy)}
-.progress-track{height:8px;background:var(--cream);border-radius:999px;overflow:hidden}
-.progress-fill{height:100%;background:var(--mint-d);border-radius:999px;transition:width .3s}
 
 .shared-note{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#e8f7f3;border:1px solid #bfe7dc;border-radius:14px;padding:12px 16px;margin-bottom:22px;font-size:.95rem}
 .btn-small{padding:.55rem 1rem;font-size:.92rem;background:var(--navy);color:var(--cream)}
 
-/* steps */
-.step-panel h2{font-size:clamp(1.6rem,3.4vw,2.1rem);margin-bottom:.35rem}
+/* form sections */
+#book .step-panel,.step-panel+.step-panel{margin-top:2.2rem;padding-top:2.2rem;border-top:1px solid var(--line)}
+.step-panel h2{display:flex;align-items:center;gap:.7rem;font-size:clamp(1.5rem,3.2vw,2rem);margin-bottom:.35rem;scroll-margin-top:96px}
 .step-panel h2:focus{outline:none}
+.sec-num{flex:none;display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--mint);color:var(--navy);font-family:var(--sans);font-size:1rem;font-weight:700}
+.form-end{margin-top:1.6rem}
+.btn-submit{width:100%;justify-content:center;font-size:1.08rem;padding:1.05rem 1.5rem}
 .step-intro{color:var(--muted);margin-bottom:1.6rem}
 fieldset{border:0;margin:0 0 1.5rem;padding:0;min-width:0}
 legend{display:block;font-weight:600;font-size:.95rem;margin-bottom:.6rem;padding:0}
@@ -74,12 +72,14 @@ legend .hint{margin-left:.35rem}
 .quick button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:var(--cream)}
 .quick button:focus-visible{outline:3px solid var(--mint-d);outline-offset:2px}
 
-.step-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:1.8rem;padding-top:1.4rem;border-top:1px solid var(--line)}
 .btn-next{background:var(--navy);color:var(--cream)}
 .btn-next:hover{background:var(--navy-2)}
 .btn-next:disabled{opacity:.6;cursor:wait;transform:none}
 .btn-back{background:transparent;border-color:var(--field);color:var(--navy)}
 .btn:focus-visible{outline:3px solid var(--mint-d);outline-offset:3px}
+
+.hours-note{background:var(--cream);border-left:4px solid var(--mint-d);border-radius:12px;padding:14px 16px;font-size:.93rem;color:var(--muted)}
+.hours-title{font-weight:600;color:var(--navy);font-size:1rem;margin-bottom:.2rem}
 
 /* summary: sidebar on desktop */
 .summary{position:sticky;top:96px;background:var(--navy);color:var(--cream);border-radius:24px;padding:26px}
@@ -154,12 +154,11 @@ legend .hint{margin-left:.35rem}
   .opts.cols-3{grid-template-columns:1fr}
   .done{padding:26px 20px}
   .done-rows div{grid-template-columns:1fr;gap:.1rem}
-  .step-nav .btn{padding:.85rem 1.2rem}
 }
 @media (max-width:380px){
   .opts{grid-template-columns:1fr}
 }
-@media (prefers-reduced-motion:reduce){.progress-fill{transition:none}}
+
 /* Estimate page nav has room for the full phone number */
 @media (max-width:640px){
   .est-page .nav-cta .ph-num{display:inline}
