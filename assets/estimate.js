@@ -382,7 +382,7 @@ if (typeof document !== 'undefined') (function () {
     'fs-current': () => $('input[name="has_cleaning_company"]:checked', book) ? '' : 'Please choose yes or no.',
   };
   // Checked top to bottom, in page order.
-  const CALC_FIELDS = ['fs-type', 'sqft', 'restrooms', 'kitchens', 'fs-floor', 'people', 'fs-freq'];
+  const CALC_FIELDS = ['sqft', 'restrooms', 'kitchens', 'fs-floor', 'people', 'fs-type', 'fs-freq'];
   const BOOK_FIELDS = ['business', 'contact', 'phone', 'email', 'address', 'walk_date', 'fs-window', 'start_date', 'fs-current'];
   // Shows every error at once and moves to the first one. Returns how many fields need fixing.
   function validate(keys) {
@@ -418,7 +418,7 @@ if (typeof document !== 'undefined') (function () {
   const box = el => el && (el.closest('.field') || el.closest('.row2') || el);
   // Nothing in section 2 (size & details) moves the page, so it has no entries here.
   const NEXT_AFTER = {
-    type: () => $('#sec-2'),
+    type: () => $('#sec-3'),  // how often
     freq: () => $('#sec-4'),  // booking
     walkthrough_window: () => box($('#start_date')),
     has_cleaning_company: v => v === 'Yes' ? $('#issues-wrap') : box($('#notes')),
