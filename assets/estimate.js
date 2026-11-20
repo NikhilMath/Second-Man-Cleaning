@@ -456,13 +456,10 @@ if (typeof document !== 'undefined') (function () {
   book.addEventListener('change', syncCurrent);
 
   /* --- after a tap/click on a single-choice option, glide to the next question --- */
-  const box = el => el && (el.closest('.field') || el.closest('.row2') || el);
-  // Nothing in section 2 (size & details) moves the page, so it has no entries here.
+  // Nothing in Size & details or inside the booking section moves the page, so they have no entries here.
   const NEXT_AFTER = {
     type: () => $('#sec-3'),  // how often
     freq: () => $('#sec-4'),  // booking
-    walkthrough_window: () => box($('#start_date')),
-    has_cleaning_company: v => v === 'Yes' ? $('#issues-wrap') : box($('#notes')),
   };
   function glideTo(el) {
     if (!el) return;
