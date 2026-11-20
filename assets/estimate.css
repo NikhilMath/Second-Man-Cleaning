@@ -151,3 +151,5 @@ legend .hint{margin-left:.35rem}
 }
 
 @media (prefers-reduced-motion:reduce){.summary{transition:none}}
+/* landing spot for the auto-scroll after picking an option (clears the sticky nav) */
+.est-sec fieldset,.est-sec .field,.est-sec .row2{scroll-margin-top:96px}

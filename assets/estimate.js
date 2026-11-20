@@ -434,6 +434,32 @@ if (typeof document !== 'undefined') (function () {
   }
   book.addEventListener('change', syncCurrent);
 
+  /* --- after a tap/click on a single-choice option, glide to the next question --- */
+  const box = el => el && (el.closest('.field') || el.closest('.row2') || el);
+  const NEXT_AFTER = {
+    type: () => $('#sec-2'),
+    floor: () => box($('#people')),
+    freq: () => $('#sec-4'),  // booking
+    walkthrough_window: () => box($('#start_date')),
+    has_cleaning_company: v => v === 'Yes' ? $('#issues-wrap') : box($('#notes')),
+  };
+  const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function glideTo(el) {
+    if (!el) return;
+    // Short pause so the checkmark registers before the page moves.
+    setTimeout(() => el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' }), 250);
+  }
+  // Only for pointer clicks/taps: arrow keys also change radios, and jumping then would be disorienting.
+  let pointerPick = false;
+  document.addEventListener('pointerdown', ev => { pointerPick = !!ev.target.closest('.opt, .quick button'); }, true);
+  document.addEventListener('keydown', () => { pointerPick = false; }, true);
+  [calc, book].forEach(f => f.addEventListener('change', ev => {
+    const t = ev.target;
+    if (!pointerPick || t.type !== 'radio' || !NEXT_AFTER[t.name]) return;
+    glideTo(NEXT_AFTER[t.name](t.value));
+  }));
+  $$('#quick-sqft button').forEach(b => b.addEventListener('click', () => { if (pointerPick) glideTo(box($('#restrooms'))); }));
+
   $('#skip-to-book').addEventListener('click', () => {
     $('#shared-note').hidden = true;
     $('#sec-5').scrollIntoView({ behavior: 'smooth', block: 'start' });
