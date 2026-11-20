@@ -171,6 +171,41 @@ if (typeof module !== 'undefined') module.exports = { PRICING, calcEstimate, tie
 if (typeof document !== 'undefined') (function () {
   'use strict';
   const P = PRICING;
+
+  /* --- slow, eased page scrolling (the browser's built-in smooth scroll is too quick) --- */
+  const SCROLL_MS_MIN = 800, SCROLL_MS_MAX = 1600;  // longer trips take longer, within these bounds
+  const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  let scrollAnim = 0;
+  // block: 'start' puts el at the top (respecting its CSS scroll-margin-top), 'center' centers it.
+  function glideScroll(el, block) {
+    if (!el) return;
+    const root = document.documentElement;
+    const r = el.getBoundingClientRect();
+    const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+    let target = block === 'center' ? scrollY + r.top - (innerHeight - r.height) / 2 : scrollY + r.top - margin;
+    target = Math.max(0, Math.min(target, root.scrollHeight - innerHeight));
+    const start = scrollY, dist = target - start;
+    cancelAnimationFrame(scrollAnim);
+    const jumpTo = y => { root.style.scrollBehavior = 'auto'; window.scrollTo(0, y); root.style.scrollBehavior = ''; };
+    if (reduceMotion || Math.abs(dist) < 2) { jumpTo(target); return; }
+    const duration = Math.min(SCROLL_MS_MAX, SCROLL_MS_MIN + Math.abs(dist) * 0.4);
+    // Let the person take over: any wheel, touch or key stops the animation where it is.
+    const STOPPERS = ['wheel', 'touchstart', 'keydown'];
+    let safety = 0;
+    const off = () => { clearTimeout(safety); STOPPERS.forEach(t => removeEventListener(t, stop)); };
+    const stop = () => { cancelAnimationFrame(scrollAnim); off(); };
+    STOPPERS.forEach(t => addEventListener(t, stop, { passive: true }));
+    // If frames are paused (e.g. a background tab), still land on the target.
+    safety = setTimeout(() => { stop(); jumpTo(target); }, duration + 300);
+    const t0 = performance.now();
+    const step = now => {
+      const k = Math.min(1, (now - t0) / duration);
+      jumpTo(start + dist * easeInOutCubic(k));
+      if (k < 1) scrollAnim = requestAnimationFrame(step); else off();
+    };
+    scrollAnim = requestAnimationFrame(step);
+  }
   // Only time slot offered for now. Change this (and the note on the page) when hours expand.
   const SERVICE_HOURS = 'After hours (after 6 pm)';
   const $ = (sel, root) => (root || document).querySelector(sel);
@@ -180,6 +215,12 @@ if (typeof document !== 'undefined') (function () {
   const num = v => { const n = parseFloat(String(v).replace(/,/g, '')); return isFinite(n) ? n : null; };
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const visitsText = v => (Math.round(v * 10) / 10).toString();
+  // In-page "Get an Instant Estimate" links use the same gentle glide.
+  $$('a[href="#estimate"]').forEach(a => a.addEventListener('click', ev => {
+    ev.preventDefault();
+    glideScroll($('#estimate'));
+    try { history.replaceState(null, '', location.pathname + location.search + '#estimate'); } catch (e) { /* ignore */ }
+  }));
 
   const calc = $('#calc');
   const book = $('#book');
@@ -390,7 +431,7 @@ if (typeof document !== 'undefined') (function () {
     if (bad.length) {
       const t = focusTarget(bad[0]);
       const box = t && (t.closest('fieldset') || t.closest('.field'));
-      if (box) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (box) glideScroll(box, 'center');
       if (t) t.focus({ preventScroll: true });
     }
     return bad.length;
@@ -423,11 +464,10 @@ if (typeof document !== 'undefined') (function () {
     walkthrough_window: () => box($('#start_date')),
     has_cleaning_company: v => v === 'Yes' ? $('#issues-wrap') : box($('#notes')),
   };
-  const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   function glideTo(el) {
     if (!el) return;
     // Short pause so the checkmark registers before the page moves.
-    setTimeout(() => el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' }), 250);
+    setTimeout(() => glideScroll(el), 250);
   }
   // Only for pointer clicks/taps: arrow keys also change radios, and jumping then would be disorienting.
   let pointerPick = false;
@@ -441,7 +481,7 @@ if (typeof document !== 'undefined') (function () {
 
   $('#skip-to-book').addEventListener('click', () => {
     $('#shared-note').hidden = true;
-    $('#sec-4').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    glideScroll($('#sec-4'));
     $('#sec-4').focus({ preventScroll: true });
   });
 
@@ -514,7 +554,7 @@ if (typeof document !== 'undefined') (function () {
     $('#done').hidden = false;
     document.body.classList.add('est-done');
     $('#done h2').focus({ preventScroll: true });
-    $('#done').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    glideScroll($('#done'));
   }
 
   // Phones/tablets: show the bottom price bar only while the calculator is on screen.
