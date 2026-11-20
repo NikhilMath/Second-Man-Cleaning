@@ -1,20 +1,13 @@
-/* Instant estimate page (/estimate). Shares tokens from styles.css. */
+/* Instant estimate section on the homepage (#estimate). Shares tokens from styles.css. */
 :root{--err:#b42318;--field:#8b93a1}
 [hidden]{display:none!important}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.skip{position:absolute;left:-9999px;top:8px;z-index:100;background:var(--mint);color:var(--navy);padding:.6rem 1rem;border-radius:8px;font-weight:600}
-.skip:focus{left:8px}
 .hp{position:absolute;left:-9999px}
 
-.est-hero{background:var(--navy);color:var(--cream);padding:56px 0 64px;position:relative;overflow:hidden}
-.est-hero::after{content:"";position:absolute;right:-160px;top:-160px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(63,193,165,.28),transparent 65%)}
-.est-hero .wrap{position:relative;z-index:1}
-.est-hero .eyebrow{color:var(--mint)}
-.est-hero h1{font-size:clamp(2.2rem,5.5vw,3.6rem);margin-bottom:.9rem}
-.est-hero h1 em{font-style:italic;color:var(--mint)}
-.est-hero p{opacity:.88;max-width:600px;font-size:1.08rem}
 
-.est-sec{padding:40px 0 88px}
+.est-sec{background:var(--cream);padding:96px 0}
+.est-intro{margin-bottom:2.4rem}
+.est-intro h2{margin-bottom:.6rem}
 .est-layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:36px;align-items:start}
 .wizard{background:#fff;border:1px solid var(--line);border-radius:24px;padding:32px;scroll-margin-top:90px}
 .wizard:focus{outline:none}
@@ -26,8 +19,8 @@
 
 /* form sections */
 #book .step-panel,.step-panel+.step-panel{margin-top:2.2rem;padding-top:2.2rem;border-top:1px solid var(--line)}
-.step-panel h2{display:flex;align-items:center;gap:.7rem;font-size:clamp(1.5rem,3.2vw,2rem);margin-bottom:.35rem;scroll-margin-top:96px}
-.step-panel h2:focus{outline:none}
+.step-panel h3{display:flex;align-items:center;gap:.7rem;font-size:clamp(1.5rem,3.2vw,2rem);margin-bottom:.35rem;scroll-margin-top:96px}
+.step-panel h3:focus{outline:none}
 .sec-num{flex:none;display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--mint);color:var(--navy);font-family:var(--sans);font-size:1rem;font-weight:700}
 .form-end{margin-top:1.6rem}
 .btn-submit{width:100%;justify-content:center;font-size:1.08rem;padding:1.05rem 1.5rem}
@@ -120,8 +113,8 @@ legend .hint{margin-left:.35rem}
 .done .fine{margin-bottom:1.6rem}
 
 /* trust */
-.trust{background:var(--cream);padding:80px 0}
-.trust-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:2rem}
+.trust-h{font-size:clamp(1.5rem,3vw,1.9rem);margin-top:4rem}
+.trust-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:1.4rem}
 .trust-item{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
 .trust-item b{display:block;font-family:var(--serif);font-size:1.25rem;font-weight:600;margin-bottom:.3rem;color:var(--navy)}
 .trust-item b::before{content:"✓";font-family:var(--sans);color:var(--mint-d);margin-right:.45rem}
@@ -133,9 +126,9 @@ legend .hint{margin-left:.35rem}
 /* tablet & phone: summary becomes a bottom bar */
 @media (max-width:900px){
   .est-layout{grid-template-columns:1fr}
-  body.est-page{padding-bottom:96px}
-  body.est-done{padding-bottom:0}
-  .summary{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:40;border-radius:20px 20px 0 0;padding:12px 20px calc(12px + env(safe-area-inset-bottom));box-shadow:0 -12px 30px rgba(10,20,40,.25);max-height:82vh;overflow:auto}
+  .est-sec{padding-bottom:120px}
+  .summary{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:40;border-radius:20px 20px 0 0;padding:12px 20px calc(12px + env(safe-area-inset-bottom));box-shadow:0 -12px 30px rgba(10,20,40,.25);max-height:82vh;overflow:auto;transform:translateY(110%);visibility:hidden;transition:transform .25s,visibility .25s}
+  .summary.in-view{transform:none;visibility:visible}
   .sum-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
   .sum-label{font-size:.7rem}
   .sum-range,.summary.empty .sum-range{font-size:1.4rem;margin-top:.1rem}
@@ -146,9 +139,8 @@ legend .hint{margin-left:.35rem}
   .sum-body{padding-bottom:6px}
 }
 @media (max-width:640px){
-  .est-hero{padding:40px 0 48px}
-  .est-sec{padding:20px 0 56px}
-  .est-sec .wrap{padding:0 12px}
+  .est-sec{padding-top:64px}
+  .est-sec .wizard,.est-sec .done{margin:0 -12px}
   .wizard{padding:22px 18px;border-radius:20px}
   .row2{grid-template-columns:1fr}
   .opts.cols-3{grid-template-columns:1fr}
@@ -159,9 +151,4 @@ legend .hint{margin-left:.35rem}
   .opts{grid-template-columns:1fr}
 }
 
-/* Estimate page nav has room for the full phone number */
-@media (max-width:640px){
-  .est-page .nav-cta .ph-num{display:inline}
-  .est-page .nav-cta .ph-ico{display:none}
-  .est-page .nav .nav-cta{width:auto;height:auto;padding:.5rem .9rem}
-}
+@media (prefers-reduced-motion:reduce){.summary{transition:none}}

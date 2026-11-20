@@ -238,7 +238,7 @@ if (typeof document !== 'undefined') (function () {
     Object.entries(PARAMS).forEach(([k, p]) => { if (s[k] !== '' && s[k] != null) q.set(p, s[k]); });
     if (s.addons.length) q.set('add', s.addons.join(','));
     const qs = q.toString();
-    try { history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '')); } catch (e) { /* ignore */ }
+    try { history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash); } catch (e) { /* ignore */ }
   }
   function readURL() {
     const q = new URLSearchParams(location.search);
@@ -515,7 +515,19 @@ if (typeof document !== 'undefined') (function () {
     $('#done').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  // Phones/tablets: show the bottom price bar only while the calculator is on screen.
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entries => entries.forEach(en => summary.classList.toggle('in-view', en.isIntersecting)))
+      .observe($('#est-app'));
+  } else summary.classList.add('in-view');
+
   /* --- start --- */
-  if (readURL()) $('#shared-note').hidden = false;
+  if (readURL()) {
+    $('#shared-note').hidden = false;
+    // Opened from a shared link: go straight to the calculator.
+    // Wait for fonts/images so the position is final.
+    const jump = () => $('#estimate').scrollIntoView({ block: 'start', behavior: 'instant' });
+    if (document.readyState === 'complete') jump(); else window.addEventListener('load', jump, { once: true });
+  }
   render();
 })();
