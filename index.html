@@ -154,7 +154,7 @@
           <button type="button" class="btn btn-small" id="skip-to-book">Jump to booking</button>
         </div>
 
-        <!-- Sections 1–4: the calculator. Not sent to Netlify directly; the results are copied into hidden fields in the booking form. -->
+        <!-- Sections 1–3: the calculator. Not sent to Netlify directly; the results are copied into hidden fields in the booking form. -->
         <form id="calc" novalidate>
           <div class="step-panel" data-step="1">
             <h3 id="sec-1" tabindex="-1"><span class="sec-num" aria-hidden="true">1</span>What kind of facility?</h3>
@@ -225,17 +225,9 @@
             </div>
           </div>
 
-          <div class="step-panel" data-step="4">
-            <h3 id="sec-4" tabindex="-1"><span class="sec-num" aria-hidden="true">4</span>Any add-ons?</h3>
-            <p class="step-intro">Optional. Leave these blank if you just need regular cleaning.</p>
-            <fieldset>
-              <legend>Add-on services <span class="hint">added to your monthly price</span></legend>
-              <div class="opts" id="opts-addon-rec"></div>
-            </fieldset>
-          </div>
         </form>
 
-        <!-- Section 5: booking. Netlify Forms reads this form at deploy time. Every field name below shows up in the notification email. -->
+        <!-- Section 4: booking. Netlify Forms reads this form at deploy time. Every field name below shows up in the notification email. -->
         <form id="book" name="walkthrough" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
           <input type="hidden" name="form-name" value="walkthrough">
           <input type="hidden" name="subject" value="New walkthrough request">
@@ -254,13 +246,11 @@
           <input type="hidden" name="floor_type">
           <input type="hidden" name="daily_people">
           <input type="hidden" name="traffic_level">
-          <input type="hidden" name="add_ons">
-          <input type="hidden" name="one_time_charges">
           <input type="hidden" name="estimate_breakdown">
           <input type="hidden" name="share_link">
 
           <div class="step-panel" data-step="5">
-            <h3 id="sec-5" tabindex="-1"><span class="sec-num" aria-hidden="true">5</span>Book your free walkthrough</h3>
+            <h3 id="sec-4" tabindex="-1"><span class="sec-num" aria-hidden="true">4</span>Book your free walkthrough</h3>
             <p class="step-intro">We'll walk through the space with someone from your team, confirm the details and give you a final quote. No obligation.</p>
 
             <div class="row2">

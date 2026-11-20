@@ -56,20 +56,8 @@ const PRICING = {
   // A one-time job is a deep clean: standard visit price × this multiplier.
   oneTimeMultiplier: 3,
 
-  // Add-ons. `recurring: true` = part of the monthly price; false = one-time charge.
-  // `per` says what `price` is multiplied by:
-  //   'visit'          flat amount every visit
-  //   'sqft-visit'     per sq ft, every visit
-  //   'restroom-month' per restroom, per month
-  //   'sqft'           per sq ft, once
-  //   'carpet-sqft'    per carpeted sq ft, once (uses floorTypes.carpetShare)
-  //   'hard-sqft'      per hard-floor sq ft, once
-  //   'flat'           flat amount, once
-  addOns: {
-    restock:   { label: 'Restroom supply restocking', detail: 'We supply paper & soap', recurring: true,  per: 'restroom-month', price: 25    },
-    disinfect: { label: 'Disinfection / sanitizing',  detail: 'Touchpoints every visit', recurring: true, per: 'sqft-visit',     price: 0.003 },
-    trash:     { label: 'Trash & recycling to dumpster', detail: 'Every visit',         recurring: true,  per: 'visit',          price: 5     },
-  },
+  // No add-on services are offered in the estimate right now.
+  addOns: {},
 
   minimumMonthly: 250,  // smallest monthly contract
   minimumOneTime: 250,  // smallest one-time job
@@ -212,14 +200,6 @@ if (typeof document !== 'undefined') (function () {
     return optHTML('radio', 'freq', k, f.label, note);
   }).join('');
 
-  function addonPrice(a) {
-    const p = a.price < 1 ? `$${a.price.toFixed(a.price < 0.01 ? 3 : 2)}` : `$${a.price.toLocaleString('en-US')}`;
-    return ({ 'visit': `${p} per visit`, 'sqft-visit': `${p}/sq ft per visit`, 'restroom-month': `${p} per restroom/month`,
-      'sqft': `${p}/sq ft`, 'carpet-sqft': `${p}/carpeted sq ft`, 'hard-sqft': `${p}/hard-floor sq ft`, 'flat': `${p} flat` })[a.per];
-  }
-  const addonOpt = ([k, a]) => optHTML('checkbox', 'addon', k, a.label,
-    `${esc(a.detail)} · ${addonPrice(a)} <em class="tag ${a.recurring ? 'tag-rec' : 'tag-once'}">${a.recurring ? 'Recurring' : 'One-time'}</em>`);
-  $('#opts-addon-rec').innerHTML = Object.entries(P.addOns).filter(([, a]) => a.recurring).map(addonOpt).join('');
 
   /* --- read / write state --- */
   const checked = name => { const el = $(`input[name="${name}"]:checked`, calc); return el ? el.value : ''; };
@@ -462,8 +442,8 @@ if (typeof document !== 'undefined') (function () {
 
   $('#skip-to-book').addEventListener('click', () => {
     $('#shared-note').hidden = true;
-    $('#sec-5').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    $('#sec-5').focus({ preventScroll: true });
+    $('#sec-4').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    $('#sec-4').focus({ preventScroll: true });
   });
 
   /* --- submit to Netlify Forms --- */
@@ -478,17 +458,14 @@ if (typeof document !== 'undefined') (function () {
     set('traffic_level', e.traffic.label);
     set('frequency', e.freq.label);
     set('preferred_time', SERVICE_HOURS);
-    set('add_ons', e.addons.length ? e.addons.map(a => `${a.label}: ${money(a.amount)} ${!a.recurring ? 'one-time' : a.per === 'restroom-month' ? 'per month' : 'per visit'}`).join('; ') : 'None');
     if (e.mode === 'once') {
       set('estimate_range', moneyRange(e.range) + ' one-time');
       set('estimate_per_visit', 'n/a (one-time job)');
       set('visits_per_month', '0 (one-time)');
-      set('one_time_charges', 'Included above');
     } else {
       set('estimate_range', moneyRange(e.range) + ' / month');
       set('estimate_per_visit', money(e.perVisit));
       set('visits_per_month', visitsText(e.visits));
-      set('one_time_charges', e.oneTimeRange ? moneyRange(e.oneTimeRange) : 'None');
     }
     set('estimate_breakdown', e.lines.map(([l, a]) => `${l}: ${a < 0 ? '-' : ''}${money(Math.abs(a))}`).join(' | ') +
       ` | ESTIMATE: ${e.mode === 'once' ? money(e.total) : money(e.monthly) + '/month'}`);
