@@ -416,7 +416,7 @@ if (typeof document !== 'undefined') (function () {
 
   /* --- after a tap/click on a single-choice option, glide to the next question --- */
   const box = el => el && (el.closest('.field') || el.closest('.row2') || el);
-  // Section 2 (size & details) has no entry here: the page stays put until all of it is filled in (see below).
+  // Nothing in section 2 (size & details) moves the page, so it has no entries here.
   const NEXT_AFTER = {
     type: () => $('#sec-2'),
     freq: () => $('#sec-4'),  // booking
@@ -438,20 +438,6 @@ if (typeof document !== 'undefined') (function () {
     if (!pointerPick || t.type !== 'radio' || !NEXT_AFTER[t.name]) return;
     glideTo(NEXT_AFTER[t.name](t.value));
   }));
-  // Section 2: stay put while it's being filled in. The first time every field in it is valid,
-  // move on to section 3. A typed number counts once the person leaves the field ("change"),
-  // never mid-typing. Runs only once, so going back to edit section 2 doesn't jump away again.
-  const SEC2 = ['sqft', 'restrooms', 'kitchens', 'fs-floor', 'people'];
-  let sec2Done = false;
-  function maybeLeaveSec2(ev) {
-    if (sec2Done || !ev.target.closest('[data-step="2"]')) return;
-    if (ev.target.type === 'radio' && !pointerPick) return;
-    if (SEC2.some(k => CHECKS[k]())) return;
-    sec2Done = true;
-    glideTo($('#sec-3'));
-  }
-  calc.addEventListener('change', maybeLeaveSec2);
-  $$('#quick-sqft button').forEach(b => b.addEventListener('click', maybeLeaveSec2));
 
   $('#skip-to-book').addEventListener('click', () => {
     $('#shared-note').hidden = true;
@@ -545,6 +531,5 @@ if (typeof document !== 'undefined') (function () {
     const jump = () => $('#estimate').scrollIntoView({ block: 'start', behavior: 'instant' });
     if (document.readyState === 'complete') jump(); else window.addEventListener('load', jump, { once: true });
   }
-  sec2Done = !SEC2.some(k => CHECKS[k]());  // already complete from a shared link
   render();
 })();
