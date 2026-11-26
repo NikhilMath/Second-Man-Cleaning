@@ -1,4 +1,4 @@
-"""Build print-ready business cards (3.5x2in trim + 0.125in bleed): one per person plus a general business card.
+"""Build print-ready business cards (3.5x2in trim + BLEED on every side): one per person plus a general business card.
 
 Run from the repo root:  python3 business-cards/build.py [slug ...]   (no slugs = build them all)
 Outputs business-cards/<slug>.pdf (single-sided) and a <slug>.png preview.
@@ -9,6 +9,13 @@ import pathlib, subprocess
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 HERE = pathlib.Path(__file__).resolve().parent
 LOGO = (HERE.parent / "assets" / "favicon.svg").as_uri()
+
+# Standard 3.5x2in card. BLEED is extra background on every side that the printer
+# trims off; MARGIN keeps all text at least this far inside the cut line.
+TRIM_W, TRIM_H = 3.5, 2.0
+BLEED = 0.25
+MARGIN = 0.125
+PAGE_W, PAGE_H = TRIM_W + 2 * BLEED, TRIM_H + 2 * BLEED
 
 ROLE = "Commercial cleaning · Cache Valley"
 
@@ -21,19 +28,19 @@ CARDS = [
 ]
 
 CSS = """
-@page{size:3.75in 2.25in;margin:0}
+@page{size:@PAGE_W@in @PAGE_H@in;margin:0}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 body{font-family:Inter,system-ui,sans-serif}
-.card{width:3.75in;height:2.25in;position:relative;overflow:hidden;page-break-after:always;break-after:page}
-/* safe area: 0.125in bleed + 0.125in margin inside trim */
-.safe{position:absolute;inset:.25in}
+.card{width:@PAGE_W@in;height:@PAGE_H@in;position:relative;overflow:hidden;page-break-after:always;break-after:page}
+/* safe area: bleed + margin inside trim */
+.safe{position:absolute;inset:@SAFE@in}
 .serif{font-family:Fraunces,Georgia,serif;font-weight:600}
 
 .front{background:#fffdf8;color:#1a1f2b}
-.front::before{content:"";position:absolute;left:0;top:0;bottom:0;width:.32in;background:#13294b}
-.front::after{content:"";position:absolute;left:.32in;top:0;bottom:0;width:.05in;background:#3fc1a5}
-.front .safe{left:.6in}
+.front::before{content:"";position:absolute;left:0;top:0;bottom:0;width:@NAVY_W@in;background:#13294b}
+.front::after{content:"";position:absolute;left:@NAVY_W@in;top:0;bottom:0;width:.05in;background:#3fc1a5}
+.front .safe{left:@TEXT_LEFT@in}
 .front .brand{display:flex;align-items:center;gap:.08in;font-size:9pt;color:#13294b}
 .front .brand img{width:.26in;height:.26in}
 .front .name{font-size:17pt;line-height:1.05;margin-top:.2in;color:#13294b}
@@ -47,6 +54,12 @@ body{font-family:Inter,system-ui,sans-serif}
 .front .lines svg{width:.1in;height:.1in;color:#2a9c84;flex:none}
 
 """
+
+# Fill in the sizes (all in inches). Visible parts inside the trim: navy stripe .195in,
+# text starts .475in from the cut line.
+for key, val in {"PAGE_W": PAGE_W, "PAGE_H": PAGE_H, "SAFE": BLEED + MARGIN,
+                 "NAVY_W": BLEED + 0.195, "TEXT_LEFT": BLEED + 0.475}.items():
+    CSS = CSS.replace(f"@{key}@", f"{val:g}")
 
 PHONE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.4 1.8.7 2.7a2 2 0 01-.5 2.1L8 9.8a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.5c.9.3 1.8.6 2.7.7a2 2 0 011.7 2z"/></svg>'
 MAIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>'
@@ -82,6 +95,7 @@ for slug, name, phone, _, role in CARDS:
     html = tmp / f"{slug}.html"
     html.write_text(page(name, phone, role))
     chrome("--no-pdf-header-footer", f"--print-to-pdf={HERE / (slug + '.pdf')}", html.as_uri())
-    # 3.75x2.25in at 96px/in = 360x216 CSS px; scale 3 for a sharp preview
-    chrome("--force-device-scale-factor=3", "--window-size=360,216", f"--screenshot={HERE / (slug + '.png')}", html.as_uri())
+    # Preview shows the whole page, bleed included: inches x 96 CSS px, scale 3 for sharpness
+    size = f"{round(PAGE_W * 96)},{round(PAGE_H * 96)}"
+    chrome("--force-device-scale-factor=3", f"--window-size={size}", f"--screenshot={HERE / (slug + '.png')}", html.as_uri())
     print("built", slug)
