@@ -81,6 +81,13 @@ legend .hint{margin-left:.35rem}
 .more>summary .hint{margin:0}
 .more-body{padding:.6rem 1rem .1rem;border-top:1px solid var(--line)}
 
+/* booking: certificate of insurance request */
+.coi-opt{display:flex;gap:.8rem;align-items:flex-start;cursor:pointer;background:#e8f7f3;border:1px solid #bfe7dc;border-radius:12px;padding:14px 16px}
+.coi-opt input{flex:none;width:20px;height:20px;margin-top:.2rem;accent-color:var(--mint-d);cursor:pointer}
+.coi-opt b{display:block;color:var(--navy);font-weight:600}
+.coi-opt small{display:block;color:var(--muted);font-size:.88rem;margin-top:.1rem}
+.coi-opt:has(input:focus-visible){outline:3px solid var(--navy);outline-offset:2px}
+
 .hours-note{background:var(--cream);border-left:4px solid var(--mint-d);border-radius:12px;padding:14px 16px;font-size:.93rem;color:var(--muted)}
 .hours-title{font-weight:600;color:var(--navy);font-size:1rem;margin-bottom:.2rem}
 

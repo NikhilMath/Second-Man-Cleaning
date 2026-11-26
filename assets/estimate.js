@@ -510,7 +510,8 @@ if (typeof document !== 'undefined') (function () {
     set('estimate_breakdown', e.lines.map(([l, a]) => `${l}: ${a < 0 ? '-' : ''}${money(Math.abs(a))}`).join(' | ') +
       ` | ESTIMATE: ${e.mode === 'once' ? money(e.total) : money(e.monthly) + '/month'}`);
     set('share_link', location.href);
-    set('subject', `Walkthrough request: ${$('#business').value.trim()} (${book.elements.estimate_range.value})`);
+    set('subject', `Walkthrough request: ${$('#business').value.trim()} (${book.elements.estimate_range.value})` +
+      ($('#coi').checked ? ' · COI requested' : ''));
   }
 
   book.addEventListener('submit', ev => {
@@ -549,6 +550,7 @@ if (typeof document !== 'undefined') (function () {
     if (e.addons.length) rows.push(['Add-ons', e.addons.map(a => a.label).join(', ')]);
     if (e.mode === 'recurring' && e.oneTimeRange) rows.push(['One-time projects', moneyRange(e.oneTimeRange)]);
     rows.push(['Requested walkthrough', `${d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}, ${win.toLowerCase()}`]);
+    if ($('#coi').checked) rows.push(['Certificate of insurance', 'We’ll email it before your walkthrough']);
     $('#done-rows').innerHTML = rows.map(r => `<div><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('');
     $('#done-name').textContent = $('#contact').value.trim().split(/\s+/)[0];
     $('#est-app').hidden = true;
