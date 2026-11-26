@@ -119,6 +119,15 @@ footer a:hover{opacity:1}
 footer .links{display:flex;gap:1.6rem;flex-wrap:wrap}
 footer .bottom{padding-top:24px;font-size:.85rem;opacity:.6}
 
+/* text pages (privacy policy) */
+.prose{max-width:720px;margin:0 auto;padding:72px 24px 96px}
+.prose h1{font-size:clamp(2.2rem,5vw,3.2rem);margin-bottom:.6rem}
+.prose h2{font-size:1.45rem;margin:2.2rem 0 .5rem}
+.prose p,.prose li{color:var(--muted)}
+.prose p+p{margin-top:.8rem}
+.prose ul{padding-left:1.3rem;display:grid;gap:.3rem;margin-top:.5rem}
+.prose .updated{font-size:.9rem}
+
 /* simple pages */
 .simple{min-height:70vh;display:grid;place-items:center;text-align:center;padding:80px 24px}
 .simple h1{font-size:clamp(2.4rem,5vw,3.6rem);margin-bottom:1rem}
