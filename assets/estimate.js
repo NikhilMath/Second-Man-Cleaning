@@ -415,19 +415,23 @@ if (typeof document !== 'undefined') (function () {
       return '';
     },
     'fs-window': () => $('input[name="walkthrough_window"]:checked', book) ? '' : 'Please choose morning or afternoon.',
+    // Optional (under "Add more details"), but a typed date can't be in the past.
     start_date: () => {
-      const d = parseLocal($('#start_date').value);
-      if (!d) return 'Choose when you would like service to start.';
+      const v = $('#start_date').value;
+      if (!v) return '';
+      const d = parseLocal(v);
+      if (!d) return 'Enter a valid date, or leave it blank.';
       return d < today ? 'The start date can’t be in the past.' : '';
     },
-    'fs-current': () => $('input[name="has_cleaning_company"]:checked', book) ? '' : 'Please choose yes or no.',
   };
   // Checked top to bottom, in page order.
   const CALC_FIELDS = ['sqft', 'toilets', 'kitchens', 'fs-floor', 'people', 'fs-type', 'fs-freq'];
-  const BOOK_FIELDS = ['business', 'contact', 'phone', 'email', 'address', 'walk_date', 'fs-window', 'start_date', 'fs-current'];
+  const BOOK_FIELDS = ['business', 'contact', 'phone', 'email', 'address', 'walk_date', 'fs-window', 'start_date'];
   // Shows every error at once and moves to the first one. Returns how many fields need fixing.
   function validate(keys) {
     const bad = keys.map(k => setErr(k, CHECKS[k]())).filter(Boolean);
+    // Open "Add more details" if an error is hiding inside it.
+    bad.forEach(k => { const d = $('#' + k).closest('details'); if (d) d.open = true; });
     if (bad.length) {
       const t = focusTarget(bad[0]);
       const box = t && (t.closest('fieldset') || t.closest('.field'));

@@ -285,19 +285,15 @@
                 <p class="err" id="err-contact" role="alert"></p>
               </div>
               <div class="field">
-                <label for="role">Title / role <span class="hint">(optional)</span></label>
-                <input id="role" name="title_role" type="text" autocomplete="organization-title" placeholder="e.g. Office manager">
-              </div>
-              <div class="field">
                 <label for="phone">Phone<span class="req" aria-hidden="true">*</span></label>
                 <input id="phone" aria-required="true" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(435) 555-0123" aria-describedby="err-phone">
                 <p class="err" id="err-phone" role="alert"></p>
               </div>
-            </div>
-            <div class="field">
-              <label for="email">Email<span class="req" aria-hidden="true">*</span></label>
-              <input id="email" aria-required="true" name="email" type="email" autocomplete="email" inputmode="email" aria-describedby="err-email">
-              <p class="err" id="err-email" role="alert"></p>
+              <div class="field">
+                <label for="email">Email<span class="req" aria-hidden="true">*</span></label>
+                <input id="email" aria-required="true" name="email" type="email" autocomplete="email" inputmode="email" aria-describedby="err-email">
+                <p class="err" id="err-email" role="alert"></p>
+              </div>
             </div>
             <div class="field">
               <label for="address">Facility address<span class="req" aria-hidden="true">*</span></label>
@@ -322,29 +318,40 @@
               </fieldset>
             </div>
 
-            <div class="field">
-              <label for="start_date">When would you like service to start?<span class="req" aria-hidden="true">*</span></label>
-              <input id="start_date" aria-required="true" name="desired_start_date" type="date" aria-describedby="err-start_date">
-              <p class="err" id="err-start_date" role="alert"></p>
-            </div>
+            <!-- Optional extras, collapsed so the form looks short. Fields inside still submit when it's closed. -->
+            <details class="more" id="more-details">
+              <summary>Add more details <span class="hint">Start date, current cleaner, notes (optional)</span></summary>
+              <div class="more-body">
+                <div class="row2">
+                  <div class="field">
+                    <label for="role">Your title / role</label>
+                    <input id="role" name="title_role" type="text" autocomplete="organization-title" placeholder="e.g. Office manager">
+                  </div>
+                  <div class="field">
+                    <label for="start_date">When should service start?</label>
+                    <input id="start_date" name="desired_start_date" type="date" aria-describedby="err-start_date">
+                    <p class="err" id="err-start_date" role="alert"></p>
+                  </div>
+                </div>
 
-            <fieldset id="fs-current" aria-required="true" aria-describedby="err-fs-current">
-              <legend>Do you currently have a cleaning company?<span class="req" aria-hidden="true">*</span></legend>
-              <div class="opts">
-                <label class="opt"><input type="radio" name="has_cleaning_company" value="Yes"><span>Yes</span></label>
-                <label class="opt"><input type="radio" name="has_cleaning_company" value="No"><span>No</span></label>
+                <fieldset id="fs-current">
+                  <legend>Do you currently have a cleaning company?</legend>
+                  <div class="opts">
+                    <label class="opt"><input type="radio" name="has_cleaning_company" value="Yes"><span>Yes</span></label>
+                    <label class="opt"><input type="radio" name="has_cleaning_company" value="No"><span>No</span></label>
+                  </div>
+                </fieldset>
+                <div class="field" id="issues-wrap" hidden>
+                  <label for="issues">What's not working with them?</label>
+                  <textarea id="issues" name="current_cleaner_issues" rows="3"></textarea>
+                </div>
+
+                <div class="field">
+                  <label for="notes">Notes or special requirements</label>
+                  <textarea id="notes" name="notes" rows="4" placeholder="Parking, which entrance to use, areas to skip…"></textarea>
+                </div>
               </div>
-              <p class="err" id="err-fs-current" role="alert"></p>
-            </fieldset>
-            <div class="field" id="issues-wrap" hidden>
-              <label for="issues">What's not working with them? <span class="hint">(optional)</span></label>
-              <textarea id="issues" name="current_cleaner_issues" rows="3"></textarea>
-            </div>
-
-            <div class="field">
-              <label for="notes">Notes or special requirements <span class="hint">(optional)</span></label>
-              <textarea id="notes" name="notes" rows="4" placeholder="Parking, which entrance to use, areas to skip…"></textarea>
-            </div>
+            </details>
 
             <p class="err" id="submit-error" role="alert" tabindex="-1"></p>
             <div class="form-end"><button type="submit" class="btn btn-next btn-submit" id="submit-btn">Book my free walkthrough</button></div>
