@@ -118,6 +118,11 @@ footer p,footer a{opacity:.75;font-size:.95rem;text-decoration:none}
 footer a:hover{opacity:1}
 footer .links{display:flex;gap:1.6rem;flex-wrap:wrap}
 footer .bottom{padding-top:24px;font-size:.85rem;opacity:.6}
+footer .foot-about{max-width:340px}
+footer .foot-about .brand{opacity:1;margin-bottom:.9rem}
+footer .foot-col{display:grid;gap:.35rem;align-content:start}
+footer .foot-h{opacity:1;font-size:.78rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--mint)}
+footer .bottom a{opacity:1;font-size:inherit;text-decoration:underline}
 
 /* text pages (privacy policy) */
 .prose{max-width:720px;margin:0 auto;padding:72px 24px 96px}
