@@ -215,6 +215,8 @@ if (typeof document !== 'undefined') (function () {
   const num = v => { const n = parseFloat(String(v).replace(/,/g, '')); return isFinite(n) ? n : null; };
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const visitsText = v => (Math.round(v * 10) / 10).toString();
+  // "From $___ / month" on the hero card follows the monthly minimum.
+  $$('[data-price-min]').forEach(el => { el.textContent = money(P.minimumMonthly); });
   // In-page "Get an Instant Estimate" links use the same gentle glide.
   $$('a[href="#estimate"]').forEach(a => a.addEventListener('click', ev => {
     ev.preventDefault();
