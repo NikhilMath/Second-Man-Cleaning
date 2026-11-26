@@ -114,7 +114,7 @@ legend .hint{margin-left:.35rem}
 /* trust */
 .trust-h{font-size:clamp(1.5rem,3vw,1.9rem);margin-top:4rem}
 .trust-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:1.4rem}
-.trust-item{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+.trust-item{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px}
 .trust-item b{display:block;font-family:var(--serif);font-size:1.25rem;font-weight:600;margin-bottom:.3rem;color:var(--navy)}
 .trust-item b::before{content:"✓";font-family:var(--sans);color:var(--mint-d);margin-right:.45rem}
 .trust-item p{color:var(--muted);font-size:.95rem}
