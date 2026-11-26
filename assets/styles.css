@@ -58,6 +58,9 @@ section{padding:96px 0}
 .card .icon{width:52px;height:52px;border-radius:14px;background:var(--cream);display:grid;place-items:center;margin-bottom:1.2rem;color:var(--navy)}
 .card h3{font-size:1.35rem;margin-bottom:.5rem}
 .card p{color:var(--muted);font-size:.98rem}
+.card-list{list-style:none;display:grid;gap:.45rem;color:var(--muted);font-size:.98rem}
+.card-list li{display:flex;gap:.55rem;align-items:baseline}
+.card-list li::before{content:"✓";color:var(--mint-d);font-weight:700}
 .card.feature{background:var(--navy);color:var(--cream);border-color:var(--navy)}
 .card.feature p{color:rgba(246,241,231,.75)}
 .card.feature .icon{background:var(--mint)}
