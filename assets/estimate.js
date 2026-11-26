@@ -487,6 +487,7 @@ if (typeof document !== 'undefined') (function () {
   function openBooking() {
     $('#book-fields').hidden = false;
     $('#start-booking').hidden = true;
+    $('#book-cta-hint').hidden = true;
     $('#start-booking').setAttribute('aria-expanded', 'true');
     $('#err-start-booking').textContent = '';
   }
