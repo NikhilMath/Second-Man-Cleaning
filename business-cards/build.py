@@ -1,17 +1,23 @@
-"""Build print-ready business cards (3.5x2in trim + 0.125in bleed) for each person.
+"""Build print-ready business cards (3.5x2in trim + 0.125in bleed): one per person plus a general business card.
 
-Run from the repo root:  python3 business-cards/build.py
+Run from the repo root:  python3 business-cards/build.py [slug ...]   (no slugs = build them all)
 Outputs business-cards/<slug>.pdf (single-sided) and a <slug>.png preview.
 """
+import sys
 import pathlib, subprocess
 
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 HERE = pathlib.Path(__file__).resolve().parent
 LOGO = (HERE.parent / "assets" / "favicon.svg").as_uri()
 
-PEOPLE = [
-    ("nikhil-math", "Nikhil Math", "(435) 232-8058", "+14352328058"),
-    ("grayson-nielsen", "Grayson Nielsen", "(435) 890-8583", "+14358908583"),
+ROLE = "Commercial cleaning · Cache Valley"
+
+# slug, big line, phone, tel, small line under it
+CARDS = [
+    ("nikhil-math", "Nikhil Math", "(435) 232-8058", "+14352328058", ROLE),
+    ("grayson-nielsen", "Grayson Nielsen", "(435) 890-8583", "+14358908583", ROLE),
+    # General card: no person, the business line rings both owners.
+    ("second-man-cleaning", "Commercial Cleaning", "(435) 919-4041", "+14359194041", "After hours · Logan &amp; Cache Valley"),
 ]
 
 CSS = """
@@ -46,12 +52,12 @@ PHONE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
 MAIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>'
 WEB = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>'
 
-def page(name, phone):
+def page(name, phone, role):
     front = f"""
 <div class="card front"><div class="safe">
   <div class="brand serif"><img src="{LOGO}" alt="">Second Man Cleaning</div>
   <div class="name serif">{name}</div>
-  <div class="role">Commercial cleaning · Cache Valley</div>
+  <div class="role">{role}</div>
   <div class="vet">Veteran owned &amp; operated</div>
   <div class="vet">Licensed &amp; insured</div>
   <div class="lines">
@@ -69,9 +75,12 @@ def chrome(*args):
                    check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 tmp = HERE / ".build"; tmp.mkdir(exist_ok=True)
-for slug, name, phone, _ in PEOPLE:
+only = set(sys.argv[1:])
+for slug, name, phone, _, role in CARDS:
+    if only and slug not in only:
+        continue
     html = tmp / f"{slug}.html"
-    html.write_text(page(name, phone))
+    html.write_text(page(name, phone, role))
     chrome("--no-pdf-header-footer", f"--print-to-pdf={HERE / (slug + '.pdf')}", html.as_uri())
     # 3.75x2.25in at 96px/in = 360x216 CSS px; scale 3 for a sharp preview
     chrome("--force-device-scale-factor=3", "--window-size=360,216", f"--screenshot={HERE / (slug + '.png')}", html.as_uri())
