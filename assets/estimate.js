@@ -296,6 +296,9 @@ if (typeof document !== 'undefined') (function () {
     $('#traffic-out').textContent = s.people == null ? '' : `Traffic level: ${tr.label}`;
 
     const e = calcEstimate(s, P);
+    // Step 4 repeats the price that will be sent to the owners.
+    $('#book-cta-est').hidden = !e;
+    if (e) $('#book-cta-range').textContent = moneyRange(e.range) + (e.mode === 'once' ? ' one-time' : ' / month');
     const label = $('#sum-label'), rangeEl = $('#sum-range'), unit = $('#sum-unit'), body = $('#sum-details');
     summary.classList.toggle('empty', !e);
     if (!e) {
@@ -480,7 +483,28 @@ if (typeof document !== 'undefined') (function () {
     glideTo(NEXT_AFTER[t.name](t.value));
   }));
 
+  /* --- step 4: the booking fields open only when someone asks to book --- */
+  function openBooking() {
+    $('#book-fields').hidden = false;
+    $('#start-booking').hidden = true;
+    $('#start-booking').setAttribute('aria-expanded', 'true');
+    $('#err-start-booking').textContent = '';
+  }
+  $('#start-booking').addEventListener('click', () => {
+    // The estimate has to be complete before it can be sent.
+    if (validate(CALC_FIELDS)) {
+      $('#err-start-booking').textContent = 'Please finish the estimate questions above first.';
+      return;
+    }
+    openBooking();
+    const first = $('#business');
+    first.focus({ preventScroll: true });
+    // Bring the first field up if it opened below the fold (or under the phone price bar).
+    if (first.getBoundingClientRect().bottom > innerHeight - 100) glideScroll(first.closest('.row2'), 'center');
+  });
+
   $('#skip-to-book').addEventListener('click', () => {
+    openBooking();
     $('#shared-note').hidden = true;
     glideScroll($('#sec-4'));
     $('#sec-4').focus({ preventScroll: true });
@@ -534,7 +558,7 @@ if (typeof document !== 'undefined') (function () {
       showDone(s, e);
     }).catch(() => {
       msg.textContent = 'Sorry, your request didn’t go through. Please try again, or call us at (435) 232-8058.';
-      btn.disabled = false; btn.textContent = 'Book my free walkthrough';
+      btn.disabled = false; btn.textContent = 'Send my estimate & book';
       msg.focus();
     });
   });

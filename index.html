@@ -270,96 +270,104 @@
           <input type="hidden" name="share_link">
 
           <div class="step-panel" data-step="4">
-            <h3 id="sec-4" tabindex="-1"><span class="sec-num" aria-hidden="true">4</span>Book your free walkthrough</h3>
-            <p class="step-intro">We'll walk through the space with someone from your team, confirm the details and give you a final quote. No obligation.</p>
-
-            <div class="row2">
-              <div class="field">
-                <label for="business">Business name<span class="req" aria-hidden="true">*</span></label>
-                <input id="business" aria-required="true" name="business_name" type="text" autocomplete="organization" aria-describedby="err-business">
-                <p class="err" id="err-business" role="alert"></p>
-              </div>
-              <div class="field">
-                <label for="contact">Your name<span class="req" aria-hidden="true">*</span></label>
-                <input id="contact" aria-required="true" name="contact_name" type="text" autocomplete="name" aria-describedby="err-contact">
-                <p class="err" id="err-contact" role="alert"></p>
-              </div>
-              <div class="field">
-                <label for="phone">Phone<span class="req" aria-hidden="true">*</span></label>
-                <input id="phone" aria-required="true" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(435) 555-0123" aria-describedby="err-phone">
-                <p class="err" id="err-phone" role="alert"></p>
-              </div>
-              <div class="field">
-                <label for="email">Email<span class="req" aria-hidden="true">*</span></label>
-                <input id="email" aria-required="true" name="email" type="email" autocomplete="email" inputmode="email" aria-describedby="err-email">
-                <p class="err" id="err-email" role="alert"></p>
-              </div>
-            </div>
-            <div class="field">
-              <label for="address">Facility address<span class="req" aria-hidden="true">*</span></label>
-              <input id="address" aria-required="true" name="facility_address" type="text" autocomplete="street-address" placeholder="Street, city (Logan, North Logan, Smithfield…)" aria-describedby="err-address">
-              <p class="err" id="err-address" role="alert"></p>
+            <h3 id="sec-4" tabindex="-1"><span class="sec-num" aria-hidden="true">4</span>Want to book a walkthrough?</h3>
+            <div class="book-cta">
+              <p class="book-cta-est" id="book-cta-est" hidden>Your estimate: <b id="book-cta-range"></b></p>
+              <p>If you'd like to meet, we'll send this estimate to our owners, and they'll reach out within 24 hours to set up a free on-site walkthrough and give you a final quote. No obligation.</p>
+              <button type="button" class="btn btn-next btn-submit" id="start-booking" aria-expanded="false" aria-controls="book-fields">Book a walkthrough</button>
+              <p class="err" id="err-start-booking" role="alert"></p>
             </div>
 
-            <div class="row2">
-              <div class="field">
-                <label for="walk_date">Preferred walkthrough date<span class="req" aria-hidden="true">*</span></label>
-                <input id="walk_date" aria-required="true" name="walkthrough_date" type="date" aria-describedby="walk-hint err-walk_date">
-                <p class="hint" id="walk-hint">Monday–Saturday</p>
-                <p class="err" id="err-walk_date" role="alert"></p>
-              </div>
-              <fieldset id="fs-window" aria-required="true" aria-describedby="err-fs-window">
-                <legend>Time window<span class="req" aria-hidden="true">*</span></legend>
-                <div class="opts">
-                  <label class="opt"><input type="radio" name="walkthrough_window" value="Morning"><span>Morning</span></label>
-                  <label class="opt"><input type="radio" name="walkthrough_window" value="Afternoon"><span>Afternoon</span></label>
-                </div>
-                <p class="err" id="err-fs-window" role="alert"></p>
-              </fieldset>
-            </div>
-
-            <!-- Optional extras, collapsed so the form looks short. Fields inside still submit when it's closed. -->
-            <details class="more" id="more-details">
-              <summary>Add more details <span class="hint">Start date, current cleaner, notes (optional)</span></summary>
-              <div class="more-body">
-                <div class="row2">
-                  <div class="field">
-                    <label for="role">Your title / role</label>
-                    <input id="role" name="title_role" type="text" autocomplete="organization-title" placeholder="e.g. Office manager">
-                  </div>
-                  <div class="field">
-                    <label for="start_date">When should service start?</label>
-                    <input id="start_date" name="desired_start_date" type="date" aria-describedby="err-start_date">
-                    <p class="err" id="err-start_date" role="alert"></p>
-                  </div>
-                </div>
-
-                <fieldset id="fs-current">
-                  <legend>Do you currently have a cleaning company?</legend>
-                  <div class="opts">
-                    <label class="opt"><input type="radio" name="has_cleaning_company" value="Yes"><span>Yes</span></label>
-                    <label class="opt"><input type="radio" name="has_cleaning_company" value="No"><span>No</span></label>
-                  </div>
-                </fieldset>
-                <div class="field" id="issues-wrap" hidden>
-                  <label for="issues">What's not working with them?</label>
-                  <textarea id="issues" name="current_cleaner_issues" rows="3"></textarea>
-                </div>
-
+            <!-- Booking fields stay hidden until "Book a walkthrough" is clicked. Netlify still reads them at deploy time. -->
+            <div id="book-fields" hidden>
+              <div class="row2">
                 <div class="field">
-                  <label for="notes">Notes or special requirements</label>
-                  <textarea id="notes" name="notes" rows="4" placeholder="Parking, which entrance to use, areas to skip…"></textarea>
+                  <label for="business">Business name<span class="req" aria-hidden="true">*</span></label>
+                  <input id="business" aria-required="true" name="business_name" type="text" autocomplete="organization" aria-describedby="err-business">
+                  <p class="err" id="err-business" role="alert"></p>
+                </div>
+                <div class="field">
+                  <label for="contact">Your name<span class="req" aria-hidden="true">*</span></label>
+                  <input id="contact" aria-required="true" name="contact_name" type="text" autocomplete="name" aria-describedby="err-contact">
+                  <p class="err" id="err-contact" role="alert"></p>
+                </div>
+                <div class="field">
+                  <label for="phone">Phone<span class="req" aria-hidden="true">*</span></label>
+                  <input id="phone" aria-required="true" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(435) 555-0123" aria-describedby="err-phone">
+                  <p class="err" id="err-phone" role="alert"></p>
+                </div>
+                <div class="field">
+                  <label for="email">Email<span class="req" aria-hidden="true">*</span></label>
+                  <input id="email" aria-required="true" name="email" type="email" autocomplete="email" inputmode="email" aria-describedby="err-email">
+                  <p class="err" id="err-email" role="alert"></p>
                 </div>
               </div>
-            </details>
+              <div class="field">
+                <label for="address">Facility address<span class="req" aria-hidden="true">*</span></label>
+                <input id="address" aria-required="true" name="facility_address" type="text" autocomplete="street-address" placeholder="Street, city (Logan, North Logan, Smithfield…)" aria-describedby="err-address">
+                <p class="err" id="err-address" role="alert"></p>
+              </div>
 
-            <label class="coi-opt">
-              <input type="checkbox" name="wants_insurance_certificate" value="Yes" id="coi">
-              <span><b>Send me your certificate of insurance</b><small>We'll email proof of our insurance before the walkthrough, so you can check it first.</small></span>
-            </label>
+              <div class="row2">
+                <div class="field">
+                  <label for="walk_date">Preferred walkthrough date<span class="req" aria-hidden="true">*</span></label>
+                  <input id="walk_date" aria-required="true" name="walkthrough_date" type="date" aria-describedby="walk-hint err-walk_date">
+                  <p class="hint" id="walk-hint">Monday–Saturday</p>
+                  <p class="err" id="err-walk_date" role="alert"></p>
+                </div>
+                <fieldset id="fs-window" aria-required="true" aria-describedby="err-fs-window">
+                  <legend>Time window<span class="req" aria-hidden="true">*</span></legend>
+                  <div class="opts">
+                    <label class="opt"><input type="radio" name="walkthrough_window" value="Morning"><span>Morning</span></label>
+                    <label class="opt"><input type="radio" name="walkthrough_window" value="Afternoon"><span>Afternoon</span></label>
+                  </div>
+                  <p class="err" id="err-fs-window" role="alert"></p>
+                </fieldset>
+              </div>
 
-            <p class="err" id="submit-error" role="alert" tabindex="-1"></p>
-            <div class="form-end"><button type="submit" class="btn btn-next btn-submit" id="submit-btn">Book my free walkthrough</button></div>
+              <!-- Optional extras, collapsed so the form looks short. Fields inside still submit when it's closed. -->
+              <details class="more" id="more-details">
+                <summary>Add more details <span class="hint">Start date, current cleaner, notes (optional)</span></summary>
+                <div class="more-body">
+                  <div class="row2">
+                    <div class="field">
+                      <label for="role">Your title / role</label>
+                      <input id="role" name="title_role" type="text" autocomplete="organization-title" placeholder="e.g. Office manager">
+                    </div>
+                    <div class="field">
+                      <label for="start_date">When should service start?</label>
+                      <input id="start_date" name="desired_start_date" type="date" aria-describedby="err-start_date">
+                      <p class="err" id="err-start_date" role="alert"></p>
+                    </div>
+                  </div>
+
+                  <fieldset id="fs-current">
+                    <legend>Do you currently have a cleaning company?</legend>
+                    <div class="opts">
+                      <label class="opt"><input type="radio" name="has_cleaning_company" value="Yes"><span>Yes</span></label>
+                      <label class="opt"><input type="radio" name="has_cleaning_company" value="No"><span>No</span></label>
+                    </div>
+                  </fieldset>
+                  <div class="field" id="issues-wrap" hidden>
+                    <label for="issues">What's not working with them?</label>
+                    <textarea id="issues" name="current_cleaner_issues" rows="3"></textarea>
+                  </div>
+
+                  <div class="field">
+                    <label for="notes">Notes or special requirements</label>
+                    <textarea id="notes" name="notes" rows="4" placeholder="Parking, which entrance to use, areas to skip…"></textarea>
+                  </div>
+                </div>
+              </details>
+
+              <label class="coi-opt">
+                <input type="checkbox" name="wants_insurance_certificate" value="Yes" id="coi">
+                <span><b>Send me your certificate of insurance</b><small>We'll email proof of our insurance before the walkthrough, so you can check it first.</small></span>
+              </label>
+
+              <p class="err" id="submit-error" role="alert" tabindex="-1"></p>
+              <div class="form-end"><button type="submit" class="btn btn-next btn-submit" id="submit-btn">Send my estimate &amp; book</button></div>
+            </div>
           </div>
         </form>
       </div>
@@ -385,7 +393,7 @@
     <div class="done" id="done" hidden>
       <span class="eyebrow">Request received</span>
       <h2 tabindex="-1">Thanks, <span id="done-name"></span>! You're on our list.</h2>
-      <p class="lede">We'll call you within 1 business day to confirm your walkthrough time. Please plan to have someone from your team there to walk the space with us.</p>
+      <p class="lede">Your estimate is on its way to our owners. They'll reach out within 24 hours to confirm your walkthrough time. Please plan to have someone from your team there to walk the space with us.</p>
       <dl class="done-rows" id="done-rows"></dl>
       <p class="fine">Estimate only. Your final quote comes after the free walkthrough. Questions? Call <a href="tel:+14352328058">(435) 232-8058</a>.</p>
     </div>
