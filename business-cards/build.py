@@ -18,13 +18,14 @@ MARGIN = 0.125
 PAGE_W, PAGE_H = TRIM_W + 2 * BLEED, TRIM_H + 2 * BLEED
 
 ROLE = "Commercial cleaning · Cache Valley"
+OFFICE = "(435) 227-5389"
 
-# slug, big line, phone, tel, small line under it
+# slug, big line, cell phone (None = office line only), small line under it
 CARDS = [
-    ("nikhil-math", "Nikhil Math", "(435) 232-8058", "+14352328058", ROLE),
-    ("grayson-nielsen", "Grayson Nielsen", "(435) 890-8583", "+14358908583", ROLE),
-    # General card: no person, the business line rings both owners.
-    ("second-man-cleaning", "Commercial Cleaning", "(435) 919-4041", "+14359194041", "After hours · Logan &amp; Cache Valley"),
+    ("nikhil-math", "Nikhil Math", "(435) 232-8058", ROLE),
+    ("grayson-nielsen", "Grayson Nielsen", "(435) 890-8583", ROLE),
+    # General card: no person, just the office line.
+    ("second-man-cleaning", "Commercial Cleaning", None, "After hours · Logan &amp; Cache Valley"),
 ]
 
 CSS = """
@@ -50,6 +51,10 @@ body{font-family:Inter,system-ui,sans-serif}
 .front .role{font-size:6.6pt;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#2a9c84;margin-top:.05in}
 .front .lines{position:absolute;bottom:0;left:0;display:grid;gap:.035in;font-size:7.6pt;color:#1a1f2b}
 .front .lines b{font-weight:600}
+/* Cards with office + cell lines: pull the name up and the lines closer to make room */
+.front.two-phones .name{margin-top:.1in}
+.front.two-phones .lines{gap:.025in}
+.front .lines i{font-style:normal;font-size:6.2pt;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#5b6475;margin-left:.02in}
 .front .lines span{display:flex;align-items:center;gap:.06in}
 .front .lines svg{width:.1in;height:.1in;color:#2a9c84;flex:none}
 
@@ -62,19 +67,25 @@ for key, val in {"PAGE_W": PAGE_W, "PAGE_H": PAGE_H, "SAFE": BLEED + MARGIN,
     CSS = CSS.replace(f"@{key}@", f"{val:g}")
 
 PHONE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.4 1.8.7 2.7a2 2 0 01-.5 2.1L8 9.8a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.5c.9.3 1.8.6 2.7.7a2 2 0 011.7 2z"/></svg>'
+CELL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>'
 MAIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>'
 WEB = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>'
 
-def page(name, phone, role):
+def page(name, cell, role):
+    if cell:
+        phones = f"""<span>{PHONE}<b>{OFFICE}</b><i>Office</i></span>
+    <span>{CELL}<b>{cell}</b><i>Cell</i></span>"""
+    else:
+        phones = f"<span>{PHONE}<b>{OFFICE}</b></span>"
     front = f"""
-<div class="card front"><div class="safe">
+<div class="card front{' two-phones' if cell else ''}"><div class="safe">
   <div class="brand serif"><img src="{LOGO}" alt="">Second Man Cleaning</div>
   <div class="name serif">{name}</div>
   <div class="role">{role}</div>
   <div class="vet">Veteran owned &amp; operated</div>
   <div class="vet">Licensed &amp; insured</div>
   <div class="lines">
-    <span>{PHONE}<b>{phone}</b></span>
+    {phones}
     <span>{MAIL}office@secondmancleaning.com</span>
     <span>{WEB}secondmancleaning.com</span>
   </div>
@@ -89,11 +100,11 @@ def chrome(*args):
 
 tmp = HERE / ".build"; tmp.mkdir(exist_ok=True)
 only = set(sys.argv[1:])
-for slug, name, phone, _, role in CARDS:
+for slug, name, cell, role in CARDS:
     if only and slug not in only:
         continue
     html = tmp / f"{slug}.html"
-    html.write_text(page(name, phone, role))
+    html.write_text(page(name, cell, role))
     chrome("--no-pdf-header-footer", f"--print-to-pdf={HERE / (slug + '.pdf')}", html.as_uri())
     # Preview shows the whole page, bleed included: inches x 96 CSS px, scale 3 for sharpness
     size = f"{round(PAGE_W * 96)},{round(PAGE_H * 96)}"
