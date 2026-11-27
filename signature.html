@@ -22,7 +22,7 @@
 <body>
 <div class="wrap">
   <h1>Email signatures</h1>
-  <p class="lead">Click <b>Copy signature</b> under your name, then paste it into Gmail (steps at the bottom).</p>
+  <p class="lead">Click <b>Copy signature</b> under the one you want, then paste it into Gmail (steps at the bottom).</p>
 
   <div class="card">
     <h2>Nikhil</h2>
@@ -34,6 +34,12 @@
     <h2>Grayson</h2>
     <div class="sig" id="sig-grayson"></div>
     <button type="button" data-copy="sig-grayson">Copy signature</button>
+  </div>
+
+  <div class="card">
+    <h2>General, no picture</h2>
+    <div class="sig" id="sig-general"></div>
+    <button type="button" data-copy="sig-general">Copy signature</button>
   </div>
 
   <div class="card">
@@ -49,9 +55,12 @@
 </div>
 
 <script>
-  var PEOPLE = {
+  // Personal signatures have a name, the logo and office + cell. The general one
+  // (no name) is text only: no picture, office line only.
+  var SIGS = {
     "sig-nikhil":  { name: "Nikhil Math",     phone: "(435) 232-8058", tel: "+14352328058" },
-    "sig-grayson": { name: "Grayson Nielsen", phone: "(435) 890-8583", tel: "+14358908583" }
+    "sig-grayson": { name: "Grayson Nielsen", phone: "(435) 890-8583", tel: "+14358908583" },
+    "sig-general": {}
   };
   var NAVY = "#13294b", MINT = "#2a9c84", GRAY = "#5b6475";
   var OFFICE = { phone: "(435) 227-5389", tel: "+14352275389" };
@@ -63,19 +72,24 @@
     return '<a href="tel:' + p.tel + '" style="color:#1a1f2b;text-decoration:none;font-weight:bold;">' + p.phone + '</a>';
   }
   function sig(p) {
+    var serif = 'font-family:Georgia,\'Times New Roman\',serif;font-weight:bold;color:' + NAVY + ';';
+    var personal = p.name ?
+      '<td style="vertical-align:top;padding:2px 14px 0 0;">' +
+        '<a href="https://secondmancleaning.com" style="text-decoration:none;"><img src="https://secondmancleaning.com/assets/email-logo.png" width="64" height="64" alt="Second Man Cleaning" style="display:block;border:0;width:64px;height:64px;"></a>' +
+      '</td>' : '';
+    var heading = p.name ?
+      '<div style="' + serif + 'font-size:18px;line-height:1.2;">' + p.name + '</div>' +
+      '<div style="' + serif + 'font-size:14px;padding-top:2px;">Second Man Cleaning</div>' :
+      '<div style="' + serif + 'font-size:18px;line-height:1.2;">Second Man Cleaning</div>';
+    var phones = p.name ? label('Office') + phone(OFFICE) + SEP + label('Cell') + phone(p) : phone(OFFICE);
     return '' +
 '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.45;color:#1a1f2b;">' +
   '<tr>' +
-    '<td style="vertical-align:top;padding:2px 14px 0 0;">' +
-      '<a href="https://secondmancleaning.com" style="text-decoration:none;"><img src="https://secondmancleaning.com/assets/email-logo.png" width="64" height="64" alt="Second Man Cleaning" style="display:block;border:0;width:64px;height:64px;"></a>' +
-    '</td>' +
+    personal +
     '<td style="vertical-align:top;padding:0 0 0 14px;border-left:3px solid #3fc1a5;">' +
-      '<div style="font-family:Georgia,\'Times New Roman\',serif;font-size:18px;font-weight:bold;color:' + NAVY + ';line-height:1.2;">' + p.name + '</div>' +
-      '<div style="font-family:Georgia,\'Times New Roman\',serif;font-size:14px;font-weight:bold;color:' + NAVY + ';padding-top:2px;">Second Man Cleaning</div>' +
+      heading +
       '<div style="font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:' + MINT + ';padding-top:2px;">Commercial cleaning &middot; Cache Valley</div>' +
-      '<div style="padding-top:8px;">' +
-        label('Office') + phone(OFFICE) + SEP + label('Cell') + phone(p) +
-      '</div>' +
+      '<div style="padding-top:8px;">' + phones + '</div>' +
       '<div><a href="mailto:office@secondmancleaning.com" style="color:#1a1f2b;text-decoration:none;">office@secondmancleaning.com</a></div>' +
       '<div><a href="https://secondmancleaning.com" style="color:' + MINT + ';text-decoration:none;font-weight:bold;">secondmancleaning.com</a></div>' +
       '<div style="font-size:11px;color:' + GRAY + ';padding-top:6px;"><span style="color:' + MINT + ';font-weight:bold;">&#10003;</span> Veteran owned &amp; operated&nbsp;&nbsp;&nbsp;<span style="color:' + MINT + ';font-weight:bold;">&#10003;</span> Licensed &amp; insured</div>' +
@@ -83,7 +97,7 @@
   '</tr>' +
 '</table>';
   }
-  Object.keys(PEOPLE).forEach(function (id) { document.getElementById(id).innerHTML = sig(PEOPLE[id]); });
+  Object.keys(SIGS).forEach(function (id) { document.getElementById(id).innerHTML = sig(SIGS[id]); });
 
   function selectAndCopy(el) {
     var r = document.createRange(); r.selectNodeContents(el);
