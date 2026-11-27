@@ -54,6 +54,14 @@
     "sig-grayson": { name: "Grayson Nielsen", phone: "(435) 890-8583", tel: "+14358908583" }
   };
   var NAVY = "#13294b", MINT = "#2a9c84", GRAY = "#5b6475";
+  var OFFICE = { phone: "(435) 227-5389", tel: "+14352275389" };
+  var SEP = '<span style="color:#c3c8d0;">&nbsp;&nbsp;|&nbsp;&nbsp;</span>';
+  function label(text) {
+    return '<span style="font-size:10px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:' + GRAY + ';">' + text + '</span>&nbsp;';
+  }
+  function phone(p) {
+    return '<a href="tel:' + p.tel + '" style="color:#1a1f2b;text-decoration:none;font-weight:bold;">' + p.phone + '</a>';
+  }
   function sig(p) {
     return '' +
 '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.45;color:#1a1f2b;">' +
@@ -66,10 +74,9 @@
       '<div style="font-family:Georgia,\'Times New Roman\',serif;font-size:14px;font-weight:bold;color:' + NAVY + ';padding-top:2px;">Second Man Cleaning</div>' +
       '<div style="font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:' + MINT + ';padding-top:2px;">Commercial cleaning &middot; Cache Valley</div>' +
       '<div style="padding-top:8px;">' +
-        '<a href="tel:' + p.tel + '" style="color:#1a1f2b;text-decoration:none;font-weight:bold;">' + p.phone + '</a>' +
-        '<span style="color:#c3c8d0;">&nbsp;&nbsp;|&nbsp;&nbsp;</span>' +
-        '<a href="mailto:office@secondmancleaning.com" style="color:#1a1f2b;text-decoration:none;">office@secondmancleaning.com</a>' +
+        label('Office') + phone(OFFICE) + SEP + label('Cell') + phone(p) +
       '</div>' +
+      '<div><a href="mailto:office@secondmancleaning.com" style="color:#1a1f2b;text-decoration:none;">office@secondmancleaning.com</a></div>' +
       '<div><a href="https://secondmancleaning.com" style="color:' + MINT + ';text-decoration:none;font-weight:bold;">secondmancleaning.com</a></div>' +
       '<div style="font-size:11px;color:' + GRAY + ';padding-top:6px;"><span style="color:' + MINT + ';font-weight:bold;">&#10003;</span> Veteran owned &amp; operated&nbsp;&nbsp;&nbsp;<span style="color:' + MINT + ';font-weight:bold;">&#10003;</span> Licensed &amp; insured</div>' +
     '</td>' +
