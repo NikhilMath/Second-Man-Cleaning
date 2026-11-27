@@ -560,7 +560,7 @@ if (typeof document !== 'undefined') (function () {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       showDone(s, e);
     }).catch(() => {
-      msg.textContent = 'Sorry, your request didn’t go through. Please try again, or call us at (435) 919-4041.';
+      msg.textContent = 'Sorry, your request didn’t go through. Please try again, or call us at (435) 227-5389.';
       btn.disabled = false; btn.textContent = 'Send my estimate & book';
       msg.focus();
     });
